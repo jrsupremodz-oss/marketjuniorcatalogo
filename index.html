@@ -10,8 +10,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts Inter -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <!-- SheetJS for Excel file upload -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     
     <script>
         tailwind.config = {
@@ -53,8 +51,8 @@
         <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16 sm:h-20 gap-2">
                 
-                <!-- Brand Logo (Triple click opens secret admin auth) -->
-                <div class="flex items-center gap-2.5 cursor-pointer group select-none" onclick="handleLogoClick()" title="Triple click para admin">
+                <!-- Brand Logo -->
+                <div class="flex items-center gap-2.5 cursor-pointer group select-none">
                     <div class="w-9 h-9 sm:w-11 sm:h-11 bg-black text-white rounded-xl sm:rounded-2xl flex items-center justify-center font-black text-base sm:text-xl tracking-tighter shadow-md group-hover:scale-105 transition-transform">
                         MJ
                     </div>
@@ -141,22 +139,6 @@
 
     <!-- Main Content -->
     <main class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 py-6 flex-grow w-full">
-        
-        <!-- Mode Banner indicator if Admin is active -->
-        <div id="adminModeBanner" class="hidden mb-4 p-3 bg-amber-500/10 border border-amber-500/30 rounded-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-            <div class="flex items-center gap-2 text-xs font-bold text-amber-900">
-                <i class="fa-solid fa-user-shield text-base"></i>
-                <span> MODO ADMINISTRADOR ACTIVO — Panel secreto abierto.</span>
-            </div>
-            <div class="flex items-center gap-2">
-                <button onclick="openAdminDashboard()" class="text-xs font-bold bg-amber-500 text-black px-3 py-1.5 rounded-lg hover:bg-amber-600 transition">
-                    Abrir Panel
-                </button>
-                <button onclick="exitAdminMode()" class="text-xs font-bold bg-neutral-900 text-white px-3 py-1.5 rounded-lg hover:bg-black transition flex items-center gap-1">
-                    <i class="fa-solid fa-right-from-bracket"></i> Salir de Admin
-                </button>
-            </div>
-        </div>
 
         <!-- Filter Tabs & Stats -->
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 mb-4 border-b border-neutral-200">
@@ -170,7 +152,7 @@
             </div>
         </div>
 
-        <!-- Compact AliExpress-Style Grid -->
+        <!-- Product Grid -->
         <div id="productGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2.5 sm:gap-4">
             <!-- Products loaded dynamically -->
         </div>
@@ -203,7 +185,7 @@
 
                 <!-- Cart Items Container -->
                 <div id="cartItemsContainer" class="p-4 flex-1 overflow-y-auto space-y-3 divide-y divide-neutral-100">
-                    <!-- Dynamic cart items go here -->
+                    <!-- Dynamic cart items -->
                 </div>
 
                 <!-- Drawer Footer & Order Trigger -->
@@ -234,15 +216,14 @@
         </div>
     </div>
 
-    <!-- Modal: Product Details with Multiple Photos Gallery & Stock Quantity Picker -->
+    <!-- Modal: Product Details -->
     <div id="productDetailModal" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 hidden flex items-center justify-center p-3 sm:p-6">
         <div class="bg-white rounded-3xl max-w-xl w-full p-5 sm:p-7 shadow-2xl relative max-h-[90vh] overflow-y-auto">
             <button onclick="closeProductDetailModal()" class="absolute top-5 right-5 w-8 h-8 rounded-full bg-neutral-100 hover:bg-neutral-200 flex items-center justify-center text-neutral-700 transition z-10">
                 <i class="fa-solid fa-xmark"></i>
             </button>
-            
             <div id="detailModalContent">
-                <!-- Dynamically populated product details, gallery, and quantity selection -->
+                <!-- Dynamically populated product details -->
             </div>
         </div>
     </div>
@@ -302,177 +283,14 @@
         </div>
     </div>
 
-    <!-- Modal: Admin PIN Auth -->
-    <div id="adminAuthModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-3xl max-w-sm w-full p-6 text-center shadow-2xl relative">
-            <button onclick="closeAdminAuthModal()" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-neutral-100 hover:bg-neutral-200 flex items-center justify-center text-neutral-700 transition">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
-            <div class="w-12 h-12 bg-black text-white rounded-2xl flex items-center justify-center mx-auto mb-3 text-lg shadow-md">
-                <i class="fa-solid fa-user-lock"></i>
-            </div>
-            <h3 class="text-lg font-black text-neutral-900">Acceso Privado Propietario</h3>
-            <p class="text-xs text-neutral-500 mt-0.5 mb-5">Ingresa tu clave secreta de administración</p>
-
-            <form onsubmit="handleAdminLogin(event)" class="space-y-3">
-                <input type="password" id="adminPinInput" placeholder="PIN Secreto" class="w-full px-4 py-3 bg-neutral-100 border border-neutral-200 rounded-xl text-center text-base tracking-widest font-bold focus:outline-none focus:border-black">
-                <p id="adminAuthError" class="text-xs text-red-600 font-bold hidden">PIN Incorrecto. Por defecto es 1234.</p>
-                <button type="submit" class="w-full py-3 bg-black hover:bg-neutral-800 text-white font-bold rounded-xl transition text-xs shadow-sm">
-                    Ingresar al Panel
-                </button>
-            </form>
-        </div>
-    </div>
-
-    <!-- Modal: Secret Admin Dashboard -->
-    <div id="adminDashboardModal" class="fixed inset-0 bg-neutral-900/85 backdrop-blur-md z-50 hidden overflow-y-auto p-3 sm:p-6">
-        <div class="max-w-6xl mx-auto bg-white rounded-3xl shadow-2xl overflow-hidden min-h-[85vh] flex flex-col">
-            <!-- Header -->
-            <div class="bg-black text-white p-5 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-neutral-800">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-neutral-800 rounded-xl flex items-center justify-center text-amber-400 text-lg">
-                        <i class="fa-solid fa-gear"></i>
-                    </div>
-                    <div>
-                        <h2 class="text-lg font-black leading-tight">Panel Secreto de Administración</h2>
-                        <p class="text-xs text-neutral-400">Market Junior • Edición y exportación para GitHub Pages</p>
-                    </div>
-                </div>
-                <div class="flex flex-wrap items-center gap-2 w-full sm:w-auto">
-                    <button onclick="exportFullHtmlCode()" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-3 py-2.5 rounded-xl transition flex items-center gap-1.5 shadow-md" title="Guardar cambios para GitHub Pages">
-                        <i class="fa-solid fa-file-code"></i> Guardar HTML para Publicar
-                    </button>
-                    <button onclick="exportCatalogCode()" class="bg-neutral-800 hover:bg-neutral-700 text-white text-xs font-bold px-3 py-2.5 rounded-xl transition flex items-center gap-1.5 border border-neutral-700" title="Exportar respaldo JSON">
-                        <i class="fa-solid fa-code text-amber-400"></i> Exportar JSON
-                    </button>
-                    <label class="cursor-pointer bg-neutral-800 hover:bg-neutral-700 text-white text-xs font-bold px-3 py-2.5 rounded-xl transition flex items-center gap-1.5 border border-neutral-700">
-                        <i class="fa-solid fa-file-excel text-emerald-400"></i> Subir Excel (.xlsx)
-                        <input type="file" id="excelFileInput" accept=".xlsx, .xls" onchange="handleExcelUpload(event)" class="hidden">
-                    </label>
-                    <button onclick="openAddProductModal()" class="bg-white hover:bg-neutral-200 text-black text-xs font-bold px-3 py-2.5 rounded-xl transition flex items-center gap-1.5 shadow-md">
-                        <i class="fa-solid fa-plus"></i> Añadir Producto
-                    </button>
-                    <button onclick="closeAdminDashboard()" class="w-9 h-9 rounded-xl bg-neutral-800 hover:bg-neutral-700 text-neutral-300 flex items-center justify-center transition">
-                        <i class="fa-solid fa-xmark"></i>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Dashboard Content -->
-            <div class="p-4 sm:p-6 flex-grow overflow-x-auto bg-neutral-50/50">
-                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4">
-                    <div>
-                        <h3 class="font-extrabold text-sm text-neutral-900">Listado Activo de Productos</h3>
-                        <p class="text-xs text-neutral-500">Puedes editar, cambiar precios, actualizar stock numérico, añadir fotos o borrar productos.</p>
-                    </div>
-                    <button onclick="triggerResetDefaultProducts()" class="text-xs text-red-600 font-bold bg-red-50 hover:bg-red-100 px-3 py-2 rounded-xl transition border border-red-200">
-                        Restablecer Catálogo Original
-                    </button>
-                </div>
-
-                <div class="bg-white rounded-2xl border border-neutral-200 overflow-hidden shadow-sm">
-                    <table class="w-full text-left text-xs border-collapse">
-                        <thead>
-                            <tr class="bg-neutral-100 text-neutral-600 font-extrabold uppercase tracking-wider border-b border-neutral-200">
-                                <th class="p-3">Img</th>
-                                <th class="p-3">Producto</th>
-                                <th class="p-3">Categoría</th>
-                                <th class="p-3">Precio ($ / Bs)</th>
-                                <th class="p-3">Fotos</th>
-                                <th class="p-3">Cant. Stock</th>
-                                <th class="p-3">Estado</th>
-                                <th class="p-3 text-right">Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody id="adminProductTable" class="divide-y divide-neutral-100">
-                            <!-- Rows populated dynamically -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal: Add / Edit Product -->
-    <div id="productFormModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-3xl max-w-lg w-full p-5 sm:p-7 shadow-2xl relative max-h-[90vh] overflow-y-auto">
-            <button onclick="closeProductFormModal()" class="absolute top-5 right-5 w-8 h-8 rounded-full bg-neutral-100 hover:bg-neutral-200 flex items-center justify-center text-neutral-700 transition">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
-            <h3 id="formModalTitle" class="text-lg font-black text-neutral-900 mb-4">Editar Producto</h3>
-
-            <form onsubmit="handleSaveProduct(event)" class="space-y-3 text-xs">
-                <input type="hidden" id="editProductId">
-
-                <div>
-                    <label class="block font-bold text-neutral-700 mb-1">Nombre del Producto *</label>
-                    <input type="text" id="formName" required placeholder="Ej: Harina PAN 1kg" class="w-full px-3.5 py-2.5 bg-neutral-50 border border-neutral-300 rounded-xl focus:bg-white focus:border-black font-medium">
-                </div>
-
-                <div class="grid grid-cols-3 gap-3">
-                    <div>
-                        <label class="block font-bold text-neutral-700 mb-1">Precio ($ USD) *</label>
-                        <input type="number" step="0.01" id="formPrice" required placeholder="1.50" class="w-full px-3.5 py-2.5 bg-neutral-50 border border-neutral-300 rounded-xl focus:bg-white focus:border-black font-medium">
-                    </div>
-                    <div>
-                        <label class="block font-bold text-neutral-700 mb-1">Stock (Unidades) *</label>
-                        <input type="number" id="formStockQty" min="0" required placeholder="10" class="w-full px-3.5 py-2.5 bg-neutral-50 border border-neutral-300 rounded-xl focus:bg-white focus:border-black font-medium">
-                    </div>
-                    <div>
-                        <label class="block font-bold text-neutral-700 mb-1">Categoría *</label>
-                        <input type="text" id="formCategory" required placeholder="Ej: Víveres" class="w-full px-3.5 py-2.5 bg-neutral-50 border border-neutral-300 rounded-xl focus:bg-white focus:border-black font-medium">
-                    </div>
-                </div>
-
-                <div>
-                    <label class="block font-bold text-neutral-700 mb-1">Descripción y Detalles del Producto</label>
-                    <textarea id="formDescription" rows="2" placeholder="Detalles de presentación, peso o características..." class="w-full px-3.5 py-2.5 bg-neutral-50 border border-neutral-300 rounded-xl focus:bg-white focus:border-black font-medium"></textarea>
-                </div>
-
-                <div>
-                    <label class="block font-bold text-neutral-700 mb-1">Múltiples URLs de Fotos (Separadas por comas o saltos de línea)</label>
-                    <textarea id="formImagesInput" rows="3" placeholder="https://imagen1.jpg, https://imagen2.jpg, ..." class="w-full px-3.5 py-2.5 bg-neutral-50 border border-neutral-300 rounded-xl focus:bg-white focus:border-black font-mono text-[11px]"></textarea>
-                    <p class="text-[10px] text-neutral-400 mt-1">Puedes pegar varias URLs de imágenes separadas por coma.</p>
-                </div>
-
-                <div class="flex items-center gap-2 pt-2">
-                    <input type="checkbox" id="formInStock" class="w-4 h-4 rounded text-black focus:ring-black accent-black">
-                    <label for="formInStock" class="font-bold text-neutral-800 cursor-pointer">Marcar como Disponible en Stock</label>
-                </div>
-
-                <div class="flex justify-end gap-2 pt-4 border-t border-neutral-200">
-                    <button type="button" onclick="closeProductFormModal()" class="px-4 py-2.5 rounded-xl border border-neutral-300 font-bold text-neutral-700 hover:bg-neutral-100 transition">
-                        Cancelar
-                    </button>
-                    <button type="submit" class="px-5 py-2.5 rounded-xl bg-black hover:bg-neutral-800 text-white font-bold transition shadow-sm">
-                        Guardar Producto
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Modal: Legal Policies (Privacy, Shipping, Terms) -->
+    <!-- Modal: Legal Policies -->
     <div id="policyModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl max-w-lg w-full p-5 sm:p-7 shadow-2xl relative max-h-[85vh] overflow-y-auto">
             <button onclick="closePolicyModal()" class="absolute top-5 right-5 w-8 h-8 rounded-full bg-neutral-100 hover:bg-neutral-200 flex items-center justify-center text-neutral-700 transition">
                 <i class="fa-solid fa-xmark"></i>
             </button>
-
             <div id="policyModalContent" class="space-y-3">
-                <!-- Dynamically populated legal policy details -->
-            </div>
-        </div>
-    </div>
-
-    <!-- Custom Modal for Confirmation -->
-    <div id="confirmModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-3xl max-w-sm w-full p-6 text-center shadow-2xl relative">
-            <h3 id="confirmTitle" class="text-base font-black text-neutral-900 mb-2">¿Estás seguro?</h3>
-            <p id="confirmMessage" class="text-xs text-neutral-500 mb-5">Esta acción no se puede deshacer.</p>
-            <div class="flex gap-2">
-                <button onclick="closeConfirmModal()" class="flex-1 py-2.5 bg-neutral-100 hover:bg-neutral-200 font-bold rounded-xl text-xs transition">Cancelar</button>
-                <button id="confirmYesButton" class="flex-1 py-2.5 bg-red-600 hover:bg-red-700 text-white font-bold rounded-xl text-xs transition">Confirmar</button>
+                <!-- Policies -->
             </div>
         </div>
     </div>
@@ -487,8 +305,6 @@
     <footer class="bg-black text-white border-t border-neutral-800 py-10 mt-12">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8 pb-8 border-b border-neutral-800">
-                
-                <!-- Col 1: Brand Info -->
                 <div class="space-y-3">
                     <div class="flex items-center gap-2.5">
                         <div class="w-8 h-8 bg-white text-black font-black rounded-lg flex items-center justify-center text-sm">MJ</div>
@@ -499,7 +315,6 @@
                     </p>
                 </div>
 
-                <!-- Col 2: Contact Methods -->
                 <div class="space-y-2 text-xs text-neutral-400">
                     <h4 class="font-bold text-white text-sm uppercase tracking-wider mb-3">Atención al Cliente</h4>
                     <p class="flex items-center gap-2"><i class="fa-brands fa-whatsapp text-emerald-400 text-sm"></i> WhatsApp: 0424-380-0296</p>
@@ -507,7 +322,6 @@
                     <p class="flex items-center gap-2"><i class="fa-solid fa-id-card text-neutral-400 text-sm"></i> RIF / CI: V-21.271.099</p>
                 </div>
 
-                <!-- Col 3: Legal & Admin Policies -->
                 <div class="space-y-2 text-xs text-neutral-400">
                     <h4 class="font-bold text-white text-sm uppercase tracking-wider mb-3">Información Legal</h4>
                     <ul class="space-y-2">
@@ -522,7 +336,6 @@
                 <p>&copy; 2026 Market Junior. Todos los derechos reservados.</p>
                 <div class="flex items-center gap-4">
                     <span class="text-neutral-600">Tasa Oficial BCV Diaria</span>
-                    <button onclick="openAdminAuthModal()" class="text-neutral-600 hover:text-neutral-400 transition" title="Acceso Propietario">Acceso Privado</button>
                 </div>
             </div>
         </div>
@@ -530,32 +343,129 @@
 
     <script>
         const WHATSAPP_NUMBER = "584243800296";
-        const ADMIN_PIN = "1234";
-
-        let currentBcvRate = 36.50; // Fallback rate until API responds
-        let products = [];
-        let cart = []; // Shopping Cart Array
+        let currentBcvRate = 36.50; // Tasa por defecto si falla la API
+        let cart = [];
         let selectedCategory = "Todos";
         let searchQuery = "";
-        let logoClickCount = 0;
-        let isAdminActive = false;
 
-        const RAW_PUBLICACIONES = [
-            "Afeitadora Gillette prestobarba x2", "Aceite Vegetal Vatel 1L", "Aceite de Maiz Mazeite 1L", "Arroz Primor Extra Blanco 1kg", "Arroz Mary Tradicional 1kg", "Harina PAN Blanca 1kg", "Harina PAN Amarilla 1kg", "Harina de Trigo Robin Hood 1kg", "Azúcar Montalbán 1kg", "Café Fama de América 250g", "Café Madrid 250g", "Leche Completa Campestre 400g", "Leche La Campiña 400g", "Mantequilla Mavesa 500g", "Mayonesa Mavesa 445g", "Salsa de Tomate Pampero 397g", "Atún Eveba en Aceite 140g", "Sardinas en Tomate Eveba", "Caraotas Negras Mary 500g", "Lentejas Mary 500g",
-            "Pasta Capri Plumas 500g", "Pasta Primor Espagueto 1kg", "Pasta Allegri Spaghetti 500g", "Avena Lassie 400g", "Cereal Flips Cacao 220g", "Chocolates Savoy Toddy 400g", "Galletas Maria Puig Pack", "Galletas Club Social Pack", "Galletas Susy Pack", "Galletas Cocosette Pack", "Chocolate Sustagen 400g", "Chicha El Chichero 500g", "Refresco Coca Cola 2L", "Refresco Pepsi 2L", "Refresco Chinotto 2L", "Jugo Yukery Durazno 1L", "Jugo Hit Naranja 1.5L", "Agua Mineral Minalba 1.5L", "Malta Polar 1.5L", "Bebida Energizante Gatorade 500ml",
-            "Detergente Las Llaves 1kg", "Detergente ACE Limón 1kg", "Jabón Las Llaves en Panela Azul", "Suavizante Downy 800ml", "Lavaplatos Axion Crema 450g", "Lavaplatos Las Llaves Líquido 500ml", "Cloro Nevex 1L", "Desinfectante Poett 1L", "Jabón de Baño Palmolive 120g", "Jabón Protex Antibacterial 110g", "Shampoo Head & Shoulders 375ml", "Acondicionador Pantene 300ml", "Crema Dental Colgate Triple Acción 100ml", "Desodorante Speed Stick 60g", "Toallas Sanitarias Nosotras x10", "Papel Higiénico Rositas 4 rollos", "Servilletas Lucerna Pack", "Protector Solar Sundown 120ml", "Crema Corporal Nivea 250ml", "Talco Mexsana 85g"
+        /* =========================================================================================
+         * 🛍️ LISTA DE PRODUCTOS (EDITA AQUÍ TUS PRODUCTOS FACILMENTE)
+         * =========================================================================================
+         * Cada producto tiene 7 datos marcados con un emoji:
+         * 🆔 id          : Un identificador único (ej: "prod_1", "prod_2")
+         * 🏷️ name        : Nombre completo del producto
+         * 📂 category    : Categoría ("Víveres", "Bebidas", "Snacks", "Hogar y Limpieza", "Cuidado Personal")
+         * 💵 price       : Precio en DÓLARES (Ej: 1.50, 2.20)
+         * 📦 stockQty    : Cantidad exacta en inventario (Ej: 10, 25)
+         * 📝 description : Descripción o detalle del producto
+         * 🖼️ images      : Enlace o URL de la foto (puedes poner varias entre comillas)
+         * 🟢 inStock     : true (si hay disponible) o false (si está totalmente agotado)
+         * ========================================================================================= */
+
+        const products = [
+            {
+                id: "prod_1",                             // 🆔 ID Único
+                name: "Harina PAN Blanca 1kg",             // 🏷️ NOMBRE DEL PRODUCTO
+                category: "Víveres",                      // 📂 CATEGORÍA
+                price: 1.25,                              // 💵 PRECIO EN DÓLARES
+                stockQty: 50,                             // 📦 CANTIDAD EN STOCK
+                description: "Harina de maíz blanco precocida tradicional venezolana. Presentación 1kg.", // 📝 DESCRIPCIÓN
+                images: ["https://images.unsplash.com/photo-1583947215259-38e31be8751f?auto=format&fit=crop&w=400&q=80"], // 🖼️ URL FOTO
+                inStock: true                             // 🟢 DISPONIBILIDAD (true / false)
+            },
+            {
+                id: "prod_2",
+                name: "Aceite Vegetal Vatel 1L",
+                category: "Víveres",
+                price: 2.80,
+                stockQty: 20,
+                description: "Aceite vegetal comestible para cocinar y freír. Envase de 1 Litro.",
+                images: ["https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?auto=format&fit=crop&w=400&q=80"],
+                inStock: true
+            },
+            {
+                id: "prod_3",
+                name: "Arroz Primor Extra Blanco 1kg",
+                category: "Víveres",
+                price: 1.40,
+                stockQty: 30,
+                description: "Arroz tipo I grano largo. Calidad Superior.",
+                images: ["https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=400&q=80"],
+                inStock: true
+            },
+            {
+                id: "prod_4",
+                name: "Café Fama de América 250g",
+                category: "Víveres",
+                price: 2.50,
+                stockQty: 15,
+                description: "Café molido gourmet tostado venezolano. Empaque 250 gramos.",
+                images: ["https://images.unsplash.com/photo-1559056199-641a0ac8b55e?auto=format&fit=crop&w=400&q=80"],
+                inStock: true
+            },
+            {
+                id: "prod_5",
+                name: "Refresco Coca Cola 2L",
+                category: "Bebidas",
+                price: 2.00,
+                stockQty: 12,
+                description: "Bebida gaseosa refrescante Coca Cola sabor original. Botella de 2 Litros.",
+                images: ["https://images.unsplash.com/photo-1622483767028-3f66f32aef97?auto=format&fit=crop&w=400&q=80"],
+                inStock: true
+            },
+            {
+                id: "prod_6",
+                name: "Detergente Las Llaves 1kg",
+                category: "Hogar y Limpieza",
+                price: 3.20,
+                stockQty: 18,
+                description: "Detergente en polvo para lavar ropa. Fragancia original 1kg.",
+                images: ["https://images.unsplash.com/photo-1585829365295-ab7cd400c167?auto=format&fit=crop&w=400&q=80"],
+                inStock: true
+            },
+            {
+                id: "prod_7",
+                name: "Cereal Flips Cacao 220g",
+                category: "Snacks",
+                price: 3.50,
+                stockQty: 8,
+                description: "Cereal de maíz y arroz relleno con deliciosa crema sabor a chocolate.",
+                images: ["https://images.unsplash.com/photo-1527515637462-cff94eecc1ac?auto=format&fit=crop&w=400&q=80"],
+                inStock: true
+            },
+            {
+                id: "prod_8",
+                name: "Crema Dental Colgate 100ml",
+                category: "Cuidado Personal",
+                price: 1.80,
+                stockQty: 25,
+                description: "Crema dental con protección anticaries y sabor a menta fresca.",
+                images: ["https://images.unsplash.com/photo-1559598467-f8b76c8155d0?auto=format&fit=crop&w=400&q=80"],
+                inStock: true
+            }
+
+            /* ➕ PARA AGREGAR UN NUEVO PRODUCTO SOLO COPIA Y PEGA ESTE BLOQUE AL FINAL DE LA LISTA:
+            ,{
+                id: "prod_9",
+                name: "Nombre de tu producto aquí",
+                category: "Víveres",
+                price: 2.00,
+                stockQty: 10,
+                description: "Descripción detallada del producto.",
+                images: ["https://enlace-de-tu-imagen.jpg"],
+                inStock: true
+            }
+            */
         ];
 
         window.addEventListener('DOMContentLoaded', async () => {
             await fetchBcvRate();
-            loadProducts();
             loadCart();
             renderCategories();
             renderProducts();
-            setupKeyboardShortcuts();
         });
 
-        // Fetch official BCV rate from public API
+        // Obtener tasa BCV automáticamente
         async function fetchBcvRate() {
             try {
                 const response = await fetch('https://ve.dolarapi.com/v1/dolares/oficial');
@@ -566,7 +476,7 @@
                     currentBcvRate = parseFloat(data.precio);
                 }
             } catch (err) {
-                console.warn("No se pudo conectar a la API BCV, usando valor por defecto.");
+                console.warn("Usando tasa por defecto.");
             }
             
             document.getElementById('bcvStatusLabel').innerText = `Tasa BCV: Bs. ${currentBcvRate.toFixed(2)} / $`;
@@ -579,54 +489,7 @@
             return bs.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
         }
 
-        function generateDefaultCatalog() {
-            const categoriesList = ["Víveres", "Bebidas", "Snacks", "Hogar y Limpieza", "Cuidado Personal"];
-            return RAW_PUBLICACIONES.map((item, index) => {
-                let cat = categoriesList[index % categoriesList.length];
-                let price = (1.10 + (index % 12) * 0.75 + (index % 3) * 0.40).toFixed(2);
-                let defaultStock = 10 + (index % 15);
-                
-                const lower = item.toLowerCase();
-                if (lower.includes('refresco') || lower.includes('jugo') || lower.includes('agua') || lower.includes('malta') || lower.includes('chicha') || lower.includes('bebida')) cat = "Bebidas";
-                else if (lower.includes('galleta') || lower.includes('chocolate') || lower.includes('flips') || lower.includes('pirulin') || lower.includes('doritos') || lower.includes('cheetos') || lower.includes('pringles')) cat = "Snacks";
-                else if (lower.includes('detergente') || lower.includes('cloro') || lower.includes('lavaplatos') || lower.includes('desinfectante') || lower.includes('limpia') || lower.includes('bolsas') || lower.includes('suavizante')) cat = "Hogar y Limpieza";
-                else if (lower.includes('shampoo') || lower.includes('jabón de baño') || lower.includes('crema dental') || lower.includes('desodorante') || lower.includes('afeitadora') || lower.includes('papel') || lower.includes('toallas')) cat = "Cuidado Personal";
-                else cat = "Víveres";
-
-                const defaultImg = "https://images.unsplash.com/photo-1583947215259-38e31be8751f?auto=format&fit=crop&w=400&q=80";
-
-                return {
-                    id: "prod_" + (index + 1),
-                    name: item,
-                    category: cat,
-                    price: parseFloat(price),
-                    stockQty: defaultStock,
-                    description: `Producto de alta calidad disponible en Market Junior Venezuela. Presentación estándar garantizada.`,
-                    images: [defaultImg],
-                    inStock: true
-                };
-            });
-        }
-
-        function loadProducts() {
-            const localData = localStorage.getItem('market_junior_full_catalog_v6');
-            if (localData) {
-                try {
-                    products = JSON.parse(localData);
-                } catch(e) {
-                    products = generateDefaultCatalog();
-                }
-            } else {
-                products = generateDefaultCatalog();
-                saveProducts();
-            }
-        }
-
-        function saveProducts() {
-            localStorage.setItem('market_junior_full_catalog_v6', JSON.stringify(products));
-        }
-
-        // --- SHOPPING CART SYSTEM ---
+        // --- SISTEMA DEL CARRITO ---
         function loadCart() {
             const savedCart = localStorage.getItem('mj_shopping_cart');
             if (savedCart) {
@@ -773,30 +636,7 @@
             window.open(waUrl, '_blank');
         }
 
-        function triggerResetDefaultProducts() {
-            showConfirmModal(
-                "¿Restablecer Catálogo?", 
-                "Se restaurarán los productos iniciales con fotos y descripciones.", 
-                () => {
-                    products = generateDefaultCatalog();
-                    saveProducts();
-                    renderCategories();
-                    renderProducts();
-                    renderAdminTable();
-                    showToast("Catálogo restablecido exitosamente.");
-                }
-            );
-        }
-
-        function handleLogoClick() {
-            logoClickCount++;
-            if (logoClickCount >= 3) {
-                logoClickCount = 0;
-                openAdminAuthModal();
-            }
-            setTimeout(() => { logoClickCount = 0; }, 1500);
-        }
-
+        // --- FILTROS Y CATEGORÍAS ---
         function renderCategories() {
             const container = document.getElementById('categoryContainer');
             const categories = ["Todos", ...new Set(products.map(p => p.category))];
@@ -853,19 +693,6 @@
 
                 return `
                 <div class="product-card bg-white rounded-2xl border border-neutral-200/90 overflow-hidden flex flex-col justify-between relative group cursor-pointer" onclick="openProductDetail('${product.id}')">
-                    
-                    <!-- Admin Quick Controls when Admin Mode is Enabled -->
-                    ${isAdminActive ? `
-                        <div class="absolute top-1.5 right-1.5 z-20 flex gap-1" onclick="event.stopPropagation()">
-                            <button onclick="editProduct('${product.id}')" class="w-7 h-7 bg-black/80 hover:bg-black text-white rounded-lg flex items-center justify-center text-[10px] backdrop-blur shadow" title="Editar">
-                                <i class="fa-solid fa-pen"></i>
-                            </button>
-                            <button onclick="triggerDeleteProduct('${product.id}')" class="w-7 h-7 bg-red-600 hover:bg-red-700 text-white rounded-lg flex items-center justify-center text-[10px] shadow" title="Borrar">
-                                <i class="fa-solid fa-trash"></i>
-                            </button>
-                        </div>
-                    ` : ''}
-
                     <div>
                         <!-- Image Container -->
                         <div class="relative w-full pt-[85%] bg-neutral-100 overflow-hidden">
@@ -875,11 +702,6 @@
                             <span class="absolute bottom-1.5 left-1.5 bg-black/80 backdrop-blur text-white text-[9px] font-extrabold uppercase px-1.5 py-0.5 rounded tracking-wide">
                                 ${product.category}
                             </span>
-                            ${product.images && product.images.length > 1 ? `
-                                <span class="absolute top-1.5 left-1.5 bg-neutral-900/80 text-white text-[9px] font-bold px-1.5 py-0.5 rounded backdrop-blur">
-                                    <i class="fa-solid fa-images text-[8px]"></i> ${product.images.length}
-                                </span>
-                            ` : ''}
                             ${!isAvailable ? `
                                 <span class="absolute top-1.5 left-1.5 bg-red-600 text-white text-[9px] font-bold px-1.5 py-0.5 rounded">
                                     Agotado
@@ -926,17 +748,14 @@
             }).join('');
         }
 
-        // Product Detail Modal with Multi-Photo Gallery & Custom Quantity Picker
-        let activeGalleryIndex = 0;
+        // DETALLE DE PRODUCTO Y GALERÍA
         let detailModalSelectedQty = 1;
 
         function openProductDetail(id) {
             const product = products.find(p => p.id === id);
             if (!product) return;
 
-            activeGalleryIndex = 0;
             detailModalSelectedQty = 1;
-
             const images = (product.images && product.images.length > 0) ? product.images : ['https://placehold.co/400x300/f5f5f5/737373?text=Market+Junior'];
             const bsVal = formatBolivars(product.price);
             const maxStock = product.stockQty !== undefined ? product.stockQty : 99;
@@ -945,7 +764,6 @@
             const container = document.getElementById('detailModalContent');
             container.innerHTML = `
                 <div class="space-y-4">
-                    <!-- Main Preview Image -->
                     <div class="relative w-full h-64 sm:h-80 bg-neutral-100 rounded-2xl overflow-hidden border border-neutral-200">
                         <img id="mainGalleryImage" src="${images[0]}" alt="${product.name}" onerror="this.src='https://placehold.co/400x300/f5f5f5/737373?text=Market+Junior'" class="w-full h-full object-cover">
                         <span class="absolute top-3 left-3 bg-black text-white text-[10px] font-extrabold uppercase px-2.5 py-1 rounded-lg">
@@ -953,23 +771,11 @@
                         </span>
                     </div>
 
-                    <!-- Thumbnails if multiple images -->
-                    ${images.length > 1 ? `
-                        <div class="flex gap-2 overflow-x-auto pb-1 no-scrollbar" id="thumbnailContainer">
-                            ${images.map((img, idx) => `
-                                <button onclick="setMainGalleryImage(${idx}, '${img}')" class="w-16 h-16 rounded-xl overflow-hidden border-2 transition-all flex-shrink-0 ${idx === 0 ? 'border-black scale-105' : 'border-neutral-200 opacity-70 hover:opacity-100'}">
-                                    <img src="${img}" class="w-full h-full object-cover">
-                                </button>
-                            `).join('')}
-                        </div>
-                    ` : ''}
-
-                    <!-- Info -->
                     <div>
                         <div class="flex items-center justify-between">
                             <span class="text-xs font-bold text-neutral-400 uppercase tracking-wider">Código: ${product.id}</span>
                             <span class="px-2.5 py-1 text-xs font-bold rounded-lg ${isAvailable ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-800'}">
-                                ${isAvailable ? `En Stock (${maxStock} disponib.)` : 'Agotado'}
+                                ${isAvailable ? `En Stock (${maxStock} disp.)` : 'Agotado'}
                             </span>
                         </div>
                         <h2 class="text-xl sm:text-2xl font-black text-neutral-900 mt-1">${product.name}</h2>
@@ -988,7 +794,6 @@
                             </div>
                         </div>
 
-                        <!-- Quantity Selector -->
                         ${isAvailable ? `
                             <div class="mt-4 flex items-center justify-between bg-neutral-100 p-3 rounded-2xl">
                                 <div>
@@ -1011,7 +816,6 @@
                         </div>
                     </div>
 
-                    <!-- Actions -->
                     <div class="pt-2">
                         ${isAvailable ? `
                             <button onclick="addToCart('${product.id}', detailModalSelectedQty); closeProductDetailModal();" class="w-full py-3 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-2xl flex items-center justify-center gap-2 transition text-sm uppercase tracking-wider shadow-md">
@@ -1019,7 +823,7 @@
                             </button>
                         ` : `
                             <button disabled class="w-full py-3 bg-neutral-100 text-neutral-400 font-bold rounded-2xl text-xs uppercase cursor-not-allowed">
-                                Producto Agotado Temporalmente
+                                Producto Agotado
                             </button>
                         `}
                     </div>
@@ -1040,22 +844,9 @@
             if (display) display.innerText = detailModalSelectedQty;
         }
 
-        function setMainGalleryImage(index, url) {
-            activeGalleryIndex = index;
-            document.getElementById('mainGalleryImage').src = url;
-            const buttons = document.querySelectorAll('#thumbnailContainer button');
-            buttons.forEach((btn, idx) => {
-                if (idx === index) {
-                    btn.className = "w-16 h-16 rounded-xl overflow-hidden border-2 border-black scale-105 transition-all flex-shrink-0";
-                } else {
-                    btn.className = "w-16 h-16 rounded-xl overflow-hidden border-2 border-neutral-200 opacity-70 hover:opacity-100 transition-all flex-shrink-0";
-                }
-            });
-        }
-
         function closeProductDetailModal() { document.getElementById('productDetailModal').classList.add('hidden'); }
 
-        // Legal Policy Modals
+        // MODAL DE POLÍTICAS
         function openPolicyModal(type) {
             const container = document.getElementById('policyModalContent');
             if (type === 'privacy') {
@@ -1065,8 +856,7 @@
                         <h3>Políticas de Privacidad</h3>
                     </div>
                     <div class="text-xs text-neutral-600 space-y-2 leading-relaxed">
-                        <p>En <strong>Market Junior</strong> respetamos la privacidad de nuestros clientes. Los datos solicitados para envíos y coordinaciones por WhatsApp (como nombre, teléfono y dirección) son utilizados exclusivamente para procesar tu pedido y realizar la entrega de tus productos.</p>
-                        <p>No compartimos ni vendemos tu información personal a terceros. Las transacciones financieras por Pago Móvil o Binance se verifican directamente con comprobantes oficiales.</p>
+                        <p>En <strong>Market Junior</strong> respetamos la privacidad de nuestros clientes. Los datos solicitados para envíos y coordinaciones por WhatsApp son utilizados exclusivamente para procesar tu pedido.</p>
                     </div>
                 `;
             } else if (type === 'shipping') {
@@ -1077,11 +867,6 @@
                     </div>
                     <div class="text-xs text-neutral-600 space-y-2 leading-relaxed">
                         <p>Ofrecemos entregas personales y servicio de delivery acordado directamente a través de nuestro WhatsApp oficial.</p>
-                        <ul class="list-disc pl-4 space-y-1">
-                            <li><strong>Entregas Personales:</strong> Coordinadas sin costo adicional en zonas céntricas estipuladas.</li>
-                            <li><strong>Delivery a Domicilio:</strong> Aplican tarifas adicionales según la distancia de despacho.</li>
-                            <li><strong>Tiempos de Entrega:</strong> Los pedidos se despachan el mismo día posterior a la confirmación de su Pago Móvil, Binance o pago en efectivo.</li>
-                        </ul>
                     </div>
                 `;
             } else if (type === 'terms') {
@@ -1091,23 +876,16 @@
                         <h3>Términos y Condiciones</h3>
                     </div>
                     <div class="text-xs text-neutral-600 space-y-2 leading-relaxed">
-                        <p>Al realizar una compra en <strong>Market Junior</strong> aceptas los siguientes términos:</p>
-                        <ul class="list-disc pl-4 space-y-1">
-                            <li><strong>Tasa de Cambio:</strong> Todos los precios expresados en Bolívares (Bs.) se calculan con la Tasa Oficial BCV del día.</li>
-                            <li><strong>Confirmación de Pedido:</strong> Todo pedido está sujeto a la disponibilidad física en inventario al momento de verificar el pago.</li>
-                            <li><strong>Métodos de Pago:</strong> Aceptamos Pago Móvil BNC, Binance Pay (USDT) y Efectivo ($ / Bs).</li>
-                        </ul>
+                        <p>Todos los precios expresados en Bolívares (Bs.) se calculan con la Tasa Oficial BCV del día.</p>
                     </div>
                 `;
             }
             document.getElementById('policyModal').classList.remove('hidden');
         }
 
-        function closePolicyModal() {
-            document.getElementById('policyModal').classList.add('hidden');
-        }
+        function closePolicyModal() { document.getElementById('policyModal').classList.add('hidden'); }
 
-        // Payment Info Modal
+        // DATOS DE PAGO
         function openPaymentInfoModal() { document.getElementById('paymentModal').classList.remove('hidden'); }
         function closePaymentInfoModal() { document.getElementById('paymentModal').classList.add('hidden'); }
 
@@ -1120,291 +898,6 @@
             document.execCommand("copy");
             document.body.removeChild(input);
             showToast("¡Datos de Pago Móvil copiados!");
-        }
-
-        // Admin Auth Modal
-        function openAdminAuthModal() {
-            document.getElementById('adminAuthModal').classList.remove('hidden');
-            document.getElementById('adminPinInput').value = "";
-            document.getElementById('adminAuthError').classList.add('hidden');
-            setTimeout(() => document.getElementById('adminPinInput').focus(), 100);
-        }
-        function closeAdminAuthModal() { document.getElementById('adminAuthModal').classList.add('hidden'); }
-
-        function handleAdminLogin(e) {
-            e.preventDefault();
-            const pin = document.getElementById('adminPinInput').value;
-            if (pin === ADMIN_PIN) {
-                isAdminActive = true;
-                closeAdminAuthModal();
-                document.getElementById('adminModeBanner').classList.remove('hidden');
-                renderProducts();
-                openAdminDashboard();
-                showToast("Acceso de Administrador Concedido");
-            } else {
-                document.getElementById('adminAuthError').classList.remove('hidden');
-            }
-        }
-
-        function exitAdminMode() {
-            isAdminActive = false;
-            document.getElementById('adminModeBanner').classList.add('hidden');
-            closeAdminDashboard();
-            renderProducts();
-            showToast("Modo administrador cerrado");
-        }
-
-        // EXPORT FULL HTML FOR GITHUB PAGES (FORCED CLEAN CUSTOMER VIEW)
-        function exportFullHtmlCode() {
-            // Forcefully hide all admin modals and reset admin state before capturing HTML
-            const wasAdmin = isAdminActive;
-            isAdminActive = false;
-
-            const dashModal = document.getElementById('adminDashboardModal');
-            const authModal = document.getElementById('adminAuthModal');
-            const formModal = document.getElementById('productFormModal');
-            const confirmModal = document.getElementById('confirmModal');
-            const detailModal = document.getElementById('productDetailModal');
-            const policyModal = document.getElementById('policyModal');
-            const cartDrawer = document.getElementById('cartDrawer');
-            const banner = document.getElementById('adminModeBanner');
-
-            const modals = [dashModal, authModal, formModal, confirmModal, detailModal, policyModal, cartDrawer, banner];
-            modals.forEach(m => { if (m) m.classList.add('hidden'); });
-
-            const blob = new Blob([
-                "<!DOCTYPE html>\n<html lang=\"es\" class=\"scroll-smooth\">\n" + document.documentElement.innerHTML + "\n</html>"
-            ], { type: 'text/html' });
-
-            // Restore admin state on current page if user was in admin mode
-            if (wasAdmin) {
-                isAdminActive = true;
-                if (banner) banner.classList.remove('hidden');
-            }
-
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'index.html';
-            a.click();
-            showToast("¡Archivo index.html exportado limpio para GitHub Pages!");
-        }
-
-        function exportCatalogCode() {
-            const jsonStr = JSON.stringify(products, null, 2);
-            const blob = new Blob([jsonStr], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'market_junior_catalog.json';
-            a.click();
-            showToast("Respaldo del catálogo exportado.");
-        }
-
-        // Admin Dashboard Table
-        function openAdminDashboard() {
-            renderAdminTable();
-            document.getElementById('adminDashboardModal').classList.remove('hidden');
-        }
-        function closeAdminDashboard() { document.getElementById('adminDashboardModal').classList.add('hidden'); }
-
-        function renderAdminTable() {
-            const tbody = document.getElementById('adminProductTable');
-            tbody.innerHTML = products.map(p => {
-                const primaryImage = (p.images && p.images.length > 0) ? p.images[0] : 'https://placehold.co/80?text=MJ';
-                const bsVal = formatBolivars(p.price);
-                const stockVal = p.stockQty !== undefined ? p.stockQty : 10;
-                return `
-                <tr class="hover:bg-neutral-50 transition-colors">
-                    <td class="p-3">
-                        <img src="${primaryImage}" class="w-8 h-8 object-cover rounded-lg border border-neutral-200" onerror="this.src='https://placehold.co/80?text=MJ'">
-                    </td>
-                    <td class="p-3 font-bold text-neutral-900">${p.name}</td>
-                    <td class="p-3 text-neutral-600 font-medium">${p.category}</td>
-                    <td class="p-3 font-mono font-bold">$${Number(p.price).toFixed(2)} <span class="text-[10px] text-emerald-600 block">Bs. ${bsVal}</span></td>
-                    <td class="p-3 text-neutral-600 font-bold">${p.images ? p.images.length : 1} foto(s)</td>
-                    <td class="p-3 font-extrabold text-neutral-800">${stockVal} unid.</td>
-                    <td class="p-3">
-                        <span class="px-2 py-0.5 text-[10px] font-bold rounded ${p.inStock && stockVal > 0 ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-800'}">
-                            ${p.inStock && stockVal > 0 ? 'Disponible' : 'Agotado'}
-                        </span>
-                    </td>
-                    <td class="p-3 text-right space-x-1">
-                        <button onclick="editProduct('${p.id}')" class="p-1.5 bg-neutral-100 hover:bg-black hover:text-white rounded-lg transition" title="Editar">
-                            <i class="fa-solid fa-pen-to-square"></i>
-                        </button>
-                        <button onclick="triggerDeleteProduct('${p.id}')" class="p-1.5 bg-red-50 text-red-600 hover:bg-red-600 hover:text-white rounded-lg transition" title="Borrar">
-                            <i class="fa-solid fa-trash"></i>
-                        </button>
-                    </td>
-                </tr>
-            `;
-            }).join('');
-        }
-
-        // Excel File Reader (.xlsx)
-        function handleExcelUpload(e) {
-            const file = e.target.files[0];
-            if (!file) return;
-
-            const reader = new FileReader();
-            reader.onload = function(evt) {
-                try {
-                    const data = new Uint8Array(evt.target.result);
-                    const workbook = XLSX.read(data, { type: 'array' });
-                    const sheet = workbook.Sheets[workbook.SheetNames[0]];
-                    const json = XLSX.utils.sheet_to_json(sheet);
-
-                    if (json && json.length > 0) {
-                        let count = 0;
-                        json.forEach((row, i) => {
-                            const name = row['Título'] || row['Title'] || row['Nombre'] || row['Producto'] || `Producto ${i+1}`;
-                            const price = parseFloat(row['Precio'] || row['Price'] || 1.50);
-                            const category = row['Categoría'] || row['Category'] || 'Víveres';
-                            const stockQty = parseInt(row['Stock'] || row['Cantidad'] || 15);
-                            const imageUrl = row['Imagen'] || row['Image'] || 'https://images.unsplash.com/photo-1583947215259-38e31be8751f?auto=format&fit=crop&w=400&q=80';
-
-                            products.unshift({
-                                id: 'excel_' + Date.now() + '_' + i,
-                                name: String(name),
-                                price: isNaN(price) ? 1.50 : price,
-                                stockQty: isNaN(stockQty) ? 15 : stockQty,
-                                category: String(category),
-                                description: 'Importado desde archivo Excel en Market Junior.',
-                                images: [String(imageUrl)],
-                                inStock: true
-                            });
-                            count++;
-                        });
-
-                        saveProducts();
-                        renderCategories();
-                        renderProducts();
-                        renderAdminTable();
-                        showToast(`¡Se cargaron ${count} productos desde el Excel!`);
-                    }
-                } catch(err) {
-                    showToast("Error procesando archivo Excel.");
-                }
-            };
-            reader.readAsArrayBuffer(file);
-        }
-
-        // Product Form (Add / Edit) with Multiple Images Support
-        function openAddProductModal() {
-            document.getElementById('editProductId').value = "";
-            document.getElementById('formModalTitle').innerText = "Nuevo Producto";
-            document.getElementById('formName').value = "";
-            document.getElementById('formPrice').value = "";
-            document.getElementById('formStockQty').value = "15";
-            document.getElementById('formCategory').value = "Víveres";
-            document.getElementById('formDescription').value = "";
-            document.getElementById('formImagesInput').value = "https://images.unsplash.com/photo-1583947215259-38e31be8751f?auto=format&fit=crop&w=400&q=80";
-            document.getElementById('formInStock').checked = true;
-            document.getElementById('productFormModal').classList.remove('hidden');
-        }
-
-        function editProduct(id) {
-            const p = products.find(item => item.id === id);
-            if (!p) return;
-
-            document.getElementById('editProductId').value = p.id;
-            document.getElementById('formModalTitle').innerText = "Editar Producto";
-            document.getElementById('formName').value = p.name;
-            document.getElementById('formPrice').value = p.price;
-            document.getElementById('formStockQty').value = p.stockQty !== undefined ? p.stockQty : 10;
-            document.getElementById('formCategory').value = p.category;
-            document.getElementById('formDescription').value = p.description || "";
-            document.getElementById('formImagesInput').value = p.images ? p.images.join(', \n') : "";
-            document.getElementById('formInStock').checked = p.inStock;
-            document.getElementById('productFormModal').classList.remove('hidden');
-        }
-
-        function closeProductFormModal() { document.getElementById('productFormModal').classList.add('hidden'); }
-
-        function handleSaveProduct(e) {
-            e.preventDefault();
-            const id = document.getElementById('editProductId').value;
-            const name = document.getElementById('formName').value.trim();
-            const price = parseFloat(document.getElementById('formPrice').value);
-            const stockQty = parseInt(document.getElementById('formStockQty').value) || 0;
-            const category = document.getElementById('formCategory').value.trim();
-            const description = document.getElementById('formDescription').value.trim();
-            
-            const rawImagesText = document.getElementById('formImagesInput').value.trim();
-            let images = rawImagesText.split(/,|\n/).map(s => s.trim()).filter(s => s.length > 0);
-            if (images.length === 0) {
-                images = ['https://placehold.co/400x300/f5f5f5/737373?text=Market+Junior'];
-            }
-
-            const inStock = document.getElementById('formInStock').checked && stockQty > 0;
-
-            if (id) {
-                const idx = products.findIndex(p => p.id === id);
-                if (idx !== -1) {
-                    products[idx] = { id, name, price, stockQty, category, description, images, inStock };
-                    showToast("Producto actualizado exitosamente");
-                }
-            } else {
-                products.unshift({
-                    id: 'prod_' + Date.now(),
-                    name,
-                    price,
-                    stockQty,
-                    category,
-                    description,
-                    images,
-                    inStock
-                });
-                showToast("Producto agregado exitosamente");
-            }
-
-            saveProducts();
-            renderCategories();
-            renderProducts();
-            renderAdminTable();
-            closeProductFormModal();
-        }
-
-        // Custom Confirm Modal
-        let confirmCallback = null;
-        function showConfirmModal(title, message, callback) {
-            document.getElementById('confirmTitle').innerText = title;
-            document.getElementById('confirmMessage').innerText = message;
-            confirmCallback = callback;
-            document.getElementById('confirmModal').classList.remove('hidden');
-        }
-        function closeConfirmModal() {
-            document.getElementById('confirmModal').classList.add('hidden');
-            confirmCallback = null;
-        }
-        document.getElementById('confirmYesButton').addEventListener('click', () => {
-            if (confirmCallback) confirmCallback();
-            closeConfirmModal();
-        });
-
-        function triggerDeleteProduct(id) {
-            showConfirmModal(
-                "¿Eliminar producto?",
-                "Esta acción borrará el producto permanentemente de tu catálogo.",
-                () => {
-                    products = products.filter(p => p.id !== id);
-                    saveProducts();
-                    renderCategories();
-                    renderProducts();
-                    renderAdminTable();
-                    showToast("Producto eliminado");
-                }
-            );
-        }
-
-        function setupKeyboardShortcuts() {
-            document.addEventListener('keydown', (e) => {
-                if (e.ctrlKey && e.shiftKey && e.key === 'A') {
-                    e.preventDefault();
-                    openAdminAuthModal();
-                }
-            });
         }
 
         function showToast(msg) {
