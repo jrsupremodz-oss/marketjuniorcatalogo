@@ -79,7 +79,7 @@
                 <div class="flex items-center gap-2">
                     <button onclick="openPaymentInfoModal()" class="flex items-center gap-1.5 text-xs font-bold px-3 py-2 sm:px-4 sm:py-2.5 rounded-xl border border-neutral-300 bg-white hover:bg-black hover:text-white transition-all shadow-sm">
                         <i class="fa-solid fa-wallet text-xs"></i>
-                        <span class="text-[11px] sm:text-xs">Pagos Bs / $</span>
+                        <span class="hidden sm:inline text-[11px] sm:text-xs">Pagos Bs / $</span>
                     </button>
 
                     <!-- Cart Trigger Button -->
@@ -153,7 +153,7 @@
                     Abrir Panel
                 </button>
                 <button onclick="exitAdminMode()" class="text-xs font-bold bg-neutral-900 text-white px-3 py-1.5 rounded-lg hover:bg-black transition flex items-center gap-1">
-                    <i class="fa-solid fa-right-from-bracket"></i> Salir
+                    <i class="fa-solid fa-right-from-bracket"></i> Salir de Admin
                 </button>
             </div>
         </div>
@@ -170,7 +170,7 @@
             </div>
         </div>
 
-        <!-- Product Grid -->
+        <!-- Compact AliExpress-Style Grid -->
         <div id="productGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2.5 sm:gap-4">
             <!-- Products loaded dynamically -->
         </div>
@@ -234,7 +234,7 @@
         </div>
     </div>
 
-    <!-- Modal: Product Details with Multiple Photos -->
+    <!-- Modal: Product Details with Multiple Photos Gallery & Stock Quantity Picker -->
     <div id="productDetailModal" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 hidden flex items-center justify-center p-3 sm:p-6">
         <div class="bg-white rounded-3xl max-w-xl w-full p-5 sm:p-7 shadow-2xl relative max-h-[90vh] overflow-y-auto">
             <button onclick="closeProductDetailModal()" class="absolute top-5 right-5 w-8 h-8 rounded-full bg-neutral-100 hover:bg-neutral-200 flex items-center justify-center text-neutral-700 transition z-10">
@@ -242,7 +242,7 @@
             </button>
             
             <div id="detailModalContent">
-                <!-- Dynamically populated product details and image gallery -->
+                <!-- Dynamically populated product details, gallery, and quantity selection -->
             </div>
         </div>
     </div>
@@ -335,7 +335,7 @@
                     </div>
                     <div>
                         <h2 class="text-lg font-black leading-tight">Panel Secreto de Administración</h2>
-                        <p class="text-xs text-neutral-400">Market Junior • Edición y exportación de archivo HTML</p>
+                        <p class="text-xs text-neutral-400">Market Junior • Edición y exportación para GitHub Pages</p>
                     </div>
                 </div>
                 <div class="flex flex-wrap items-center gap-2 w-full sm:w-auto">
@@ -363,7 +363,7 @@
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4">
                     <div>
                         <h3 class="font-extrabold text-sm text-neutral-900">Listado Activo de Productos</h3>
-                        <p class="text-xs text-neutral-500">Puedes editar, añadir varias fotos o borrar cualquier producto.</p>
+                        <p class="text-xs text-neutral-500">Puedes editar, cambiar precios, actualizar stock numérico, añadir fotos o borrar productos.</p>
                     </div>
                     <button onclick="triggerResetDefaultProducts()" class="text-xs text-red-600 font-bold bg-red-50 hover:bg-red-100 px-3 py-2 rounded-xl transition border border-red-200">
                         Restablecer Catálogo Original
@@ -379,6 +379,7 @@
                                 <th class="p-3">Categoría</th>
                                 <th class="p-3">Precio ($ / Bs)</th>
                                 <th class="p-3">Fotos</th>
+                                <th class="p-3">Cant. Stock</th>
                                 <th class="p-3">Estado</th>
                                 <th class="p-3 text-right">Acciones</th>
                             </tr>
@@ -408,10 +409,14 @@
                     <input type="text" id="formName" required placeholder="Ej: Harina PAN 1kg" class="w-full px-3.5 py-2.5 bg-neutral-50 border border-neutral-300 rounded-xl focus:bg-white focus:border-black font-medium">
                 </div>
 
-                <div class="grid grid-cols-2 gap-3">
+                <div class="grid grid-cols-3 gap-3">
                     <div>
                         <label class="block font-bold text-neutral-700 mb-1">Precio ($ USD) *</label>
                         <input type="number" step="0.01" id="formPrice" required placeholder="1.50" class="w-full px-3.5 py-2.5 bg-neutral-50 border border-neutral-300 rounded-xl focus:bg-white focus:border-black font-medium">
+                    </div>
+                    <div>
+                        <label class="block font-bold text-neutral-700 mb-1">Stock (Unidades) *</label>
+                        <input type="number" id="formStockQty" min="0" required placeholder="10" class="w-full px-3.5 py-2.5 bg-neutral-50 border border-neutral-300 rounded-xl focus:bg-white focus:border-black font-medium">
                     </div>
                     <div>
                         <label class="block font-bold text-neutral-700 mb-1">Categoría *</label>
@@ -432,7 +437,7 @@
 
                 <div class="flex items-center gap-2 pt-2">
                     <input type="checkbox" id="formInStock" class="w-4 h-4 rounded text-black focus:ring-black accent-black">
-                    <label for="formInStock" class="font-bold text-neutral-800 cursor-pointer">Producto En Stock</label>
+                    <label for="formInStock" class="font-bold text-neutral-800 cursor-pointer">Marcar como Disponible en Stock</label>
                 </div>
 
                 <div class="flex justify-end gap-2 pt-4 border-t border-neutral-200">
@@ -444,6 +449,19 @@
                     </button>
                 </div>
             </form>
+        </div>
+    </div>
+
+    <!-- Modal: Legal Policies (Privacy, Shipping, Terms) -->
+    <div id="policyModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-5 sm:p-7 shadow-2xl relative max-h-[85vh] overflow-y-auto">
+            <button onclick="closePolicyModal()" class="absolute top-5 right-5 w-8 h-8 rounded-full bg-neutral-100 hover:bg-neutral-200 flex items-center justify-center text-neutral-700 transition">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div id="policyModalContent" class="space-y-3">
+                <!-- Dynamically populated legal policy details -->
+            </div>
         </div>
     </div>
 
@@ -466,24 +484,46 @@
     </div>
 
     <!-- Footer -->
-    <footer class="bg-black text-white border-t border-neutral-800 py-8 mt-12">
+    <footer class="bg-black text-white border-t border-neutral-800 py-10 mt-12">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex flex-col md:flex-row items-center justify-between gap-6 pb-6 border-b border-neutral-800">
-                <div class="flex items-center gap-2.5">
-                    <div class="w-8 h-8 bg-white text-black font-black rounded-lg flex items-center justify-center text-sm">MJ</div>
-                    <span class="font-black text-base tracking-tight">MARKET JUNIOR</span>
-                </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 pb-8 border-b border-neutral-800">
                 
-                <div class="flex flex-wrap items-center justify-center gap-6 text-xs text-neutral-400">
-                    <span><i class="fa-brands fa-whatsapp text-emerald-400 mr-1"></i> WhatsApp: 0424-380-0296</span>
-                    <span><i class="fa-solid fa-building-columns text-neutral-400 mr-1"></i> BNC: 0416-948-5195</span>
-                    <span><i class="fa-solid fa-id-card text-neutral-400 mr-1"></i> V-21.271.099</span>
+                <!-- Col 1: Brand Info -->
+                <div class="space-y-3">
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-8 h-8 bg-white text-black font-black rounded-lg flex items-center justify-center text-sm">MJ</div>
+                        <span class="font-black text-base tracking-tight">MARKET JUNIOR</span>
+                    </div>
+                    <p class="text-xs text-neutral-400 leading-relaxed">
+                        Tu supermercado y tienda online de confianza en Venezuela. Precios transparentes con tasa oficial BCV y atención directa por WhatsApp.
+                    </p>
+                </div>
+
+                <!-- Col 2: Contact Methods -->
+                <div class="space-y-2 text-xs text-neutral-400">
+                    <h4 class="font-bold text-white text-sm uppercase tracking-wider mb-3">Atención al Cliente</h4>
+                    <p class="flex items-center gap-2"><i class="fa-brands fa-whatsapp text-emerald-400 text-sm"></i> WhatsApp: 0424-380-0296</p>
+                    <p class="flex items-center gap-2"><i class="fa-solid fa-building-columns text-neutral-400 text-sm"></i> BNC: 0416-948-5195</p>
+                    <p class="flex items-center gap-2"><i class="fa-solid fa-id-card text-neutral-400 text-sm"></i> RIF / CI: V-21.271.099</p>
+                </div>
+
+                <!-- Col 3: Legal & Admin Policies -->
+                <div class="space-y-2 text-xs text-neutral-400">
+                    <h4 class="font-bold text-white text-sm uppercase tracking-wider mb-3">Información Legal</h4>
+                    <ul class="space-y-2">
+                        <li><button onclick="openPolicyModal('privacy')" class="hover:text-white transition underline">Políticas de Privacidad</button></li>
+                        <li><button onclick="openPolicyModal('shipping')" class="hover:text-white transition underline">Políticas de Envío y Entregas</button></li>
+                        <li><button onclick="openPolicyModal('terms')" class="hover:text-white transition underline">Términos y Condiciones</button></li>
+                    </ul>
                 </div>
             </div>
 
             <div class="pt-6 flex flex-col sm:flex-row items-center justify-between text-[11px] text-neutral-500 gap-3">
                 <p>&copy; 2026 Market Junior. Todos los derechos reservados.</p>
-                <span class="text-neutral-600">Catálogo oficial con BCV automático</span>
+                <div class="flex items-center gap-4">
+                    <span class="text-neutral-600">Tasa Oficial BCV Diaria</span>
+                    <button onclick="openAdminAuthModal()" class="text-neutral-600 hover:text-neutral-400 transition" title="Acceso Propietario">Acceso Privado</button>
+                </div>
             </div>
         </div>
     </footer>
@@ -544,6 +584,7 @@
             return RAW_PUBLICACIONES.map((item, index) => {
                 let cat = categoriesList[index % categoriesList.length];
                 let price = (1.10 + (index % 12) * 0.75 + (index % 3) * 0.40).toFixed(2);
+                let defaultStock = 10 + (index % 15);
                 
                 const lower = item.toLowerCase();
                 if (lower.includes('refresco') || lower.includes('jugo') || lower.includes('agua') || lower.includes('malta') || lower.includes('chicha') || lower.includes('bebida')) cat = "Bebidas";
@@ -559,6 +600,7 @@
                     name: item,
                     category: cat,
                     price: parseFloat(price),
+                    stockQty: defaultStock,
                     description: `Producto de alta calidad disponible en Market Junior Venezuela. Presentación estándar garantizada.`,
                     images: [defaultImg],
                     inStock: true
@@ -567,7 +609,7 @@
         }
 
         function loadProducts() {
-            const localData = localStorage.getItem('market_junior_full_catalog_v5');
+            const localData = localStorage.getItem('market_junior_full_catalog_v6');
             if (localData) {
                 try {
                     products = JSON.parse(localData);
@@ -581,7 +623,7 @@
         }
 
         function saveProducts() {
-            localStorage.setItem('market_junior_full_catalog_v5', JSON.stringify(products));
+            localStorage.setItem('market_junior_full_catalog_v6', JSON.stringify(products));
         }
 
         // --- SHOPPING CART SYSTEM ---
@@ -598,25 +640,44 @@
             renderCart();
         }
 
-        function addToCart(productId) {
+        function addToCart(productId, qtyToAdd = 1) {
             const product = products.find(p => p.id === productId);
-            if (!product || !product.inStock) return;
+            if (!product || !product.inStock || product.stockQty <= 0) {
+                showToast("Producto agotado");
+                return;
+            }
 
             const existingIndex = cart.findIndex(item => item.id === productId);
+            const currentCartQty = existingIndex !== -1 ? cart[existingIndex].qty : 0;
+            
+            if (currentCartQty + qtyToAdd > product.stockQty) {
+                showToast(`Solo quedan ${product.stockQty} unidades disponibles`);
+                return;
+            }
+
             if (existingIndex !== -1) {
-                cart[existingIndex].qty += 1;
+                cart[existingIndex].qty += qtyToAdd;
             } else {
-                cart.push({ id: product.id, name: product.name, price: product.price, image: (product.images && product.images[0]) ? product.images[0] : 'https://placehold.co/100', qty: 1 });
+                cart.push({ id: product.id, name: product.name, price: product.price, image: (product.images && product.images[0]) ? product.images[0] : 'https://placehold.co/100', qty: qtyToAdd });
             }
 
             saveCart();
-            showToast(`¡${product.name} agregado al carrito!`);
+            showToast(`¡${qtyToAdd}x ${product.name} agregado al carrito!`);
         }
 
         function changeCartQty(productId, delta) {
             const index = cart.findIndex(item => item.id === productId);
             if (index !== -1) {
-                cart[index].qty += delta;
+                const product = products.find(p => p.id === productId);
+                const maxStock = product ? (product.stockQty || 99) : 99;
+                
+                const newQty = cart[index].qty + delta;
+                if (newQty > maxStock) {
+                    showToast(`Límite máximo disponible: ${maxStock}`);
+                    return;
+                }
+
+                cart[index].qty = newQty;
                 if (cart[index].qty <= 0) {
                     cart.splice(index, 1);
                 }
@@ -788,6 +849,7 @@
             grid.innerHTML = filtered.map(product => {
                 const primaryImage = (product.images && product.images.length > 0 && product.images[0]) ? product.images[0] : 'https://placehold.co/300x200/f5f5f5/737373?text=Market+Junior';
                 const bsVal = formatBolivars(product.price);
+                const isAvailable = product.inStock && (product.stockQty === undefined || product.stockQty > 0);
 
                 return `
                 <div class="product-card bg-white rounded-2xl border border-neutral-200/90 overflow-hidden flex flex-col justify-between relative group cursor-pointer" onclick="openProductDetail('${product.id}')">
@@ -818,7 +880,7 @@
                                     <i class="fa-solid fa-images text-[8px]"></i> ${product.images.length}
                                 </span>
                             ` : ''}
-                            ${!product.inStock ? `
+                            ${!isAvailable ? `
                                 <span class="absolute top-1.5 left-1.5 bg-red-600 text-white text-[9px] font-bold px-1.5 py-0.5 rounded">
                                     Agotado
                                 </span>
@@ -829,22 +891,27 @@
                         <div class="p-2.5">
                             <h3 class="font-bold text-xs text-neutral-900 leading-snug line-clamp-2 min-h-[2.25rem]">${product.name}</h3>
                             
-                            <div class="mt-2">
-                                <div class="flex items-baseline gap-1">
-                                    <span class="text-base font-black text-black">$${Number(product.price).toFixed(2)}</span>
-                                    <span class="text-[9px] text-neutral-400 font-extrabold">USD</span>
+                            <div class="mt-2 flex items-end justify-between">
+                                <div>
+                                    <div class="flex items-baseline gap-1">
+                                        <span class="text-base font-black text-black">$${Number(product.price).toFixed(2)}</span>
+                                        <span class="text-[9px] text-neutral-400 font-extrabold">USD</span>
+                                    </div>
+                                    <div class="text-[11px] font-bold text-emerald-600">
+                                        Bs. ${bsVal}
+                                    </div>
                                 </div>
-                                <div class="text-[11px] font-bold text-emerald-600">
-                                    Bs. ${bsVal}
-                                </div>
+                                <span class="text-[10px] font-bold text-neutral-400 bg-neutral-100 px-1.5 py-0.5 rounded">
+                                    Stock: ${product.stockQty !== undefined ? product.stockQty : 'Disp.'}
+                                </span>
                             </div>
                         </div>
                     </div>
 
                     <!-- Button -->
                     <div class="p-2.5 pt-0" onclick="event.stopPropagation()">
-                        ${product.inStock ? `
-                            <button onclick="addToCart('${product.id}')" 
+                        ${isAvailable ? `
+                            <button onclick="addToCart('${product.id}', 1)" 
                                 class="w-full py-2 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-xl flex items-center justify-center gap-1.5 transition text-[11px] uppercase tracking-wider shadow-sm">
                                 <i class="fa-solid fa-cart-plus text-xs"></i> Agregar
                             </button>
@@ -859,15 +926,21 @@
             }).join('');
         }
 
-        // Product Detail Modal with Multi-Photo Gallery
+        // Product Detail Modal with Multi-Photo Gallery & Custom Quantity Picker
         let activeGalleryIndex = 0;
+        let detailModalSelectedQty = 1;
+
         function openProductDetail(id) {
             const product = products.find(p => p.id === id);
             if (!product) return;
 
             activeGalleryIndex = 0;
+            detailModalSelectedQty = 1;
+
             const images = (product.images && product.images.length > 0) ? product.images : ['https://placehold.co/400x300/f5f5f5/737373?text=Market+Junior'];
             const bsVal = formatBolivars(product.price);
+            const maxStock = product.stockQty !== undefined ? product.stockQty : 99;
+            const isAvailable = product.inStock && maxStock > 0;
 
             const container = document.getElementById('detailModalContent');
             container.innerHTML = `
@@ -895,8 +968,8 @@
                     <div>
                         <div class="flex items-center justify-between">
                             <span class="text-xs font-bold text-neutral-400 uppercase tracking-wider">Código: ${product.id}</span>
-                            <span class="px-2.5 py-1 text-xs font-bold rounded-lg ${product.inStock ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-800'}">
-                                ${product.inStock ? 'Disponible en Stock' : 'Agotado'}
+                            <span class="px-2.5 py-1 text-xs font-bold rounded-lg ${isAvailable ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-800'}">
+                                ${isAvailable ? `En Stock (${maxStock} disponib.)` : 'Agotado'}
                             </span>
                         </div>
                         <h2 class="text-xl sm:text-2xl font-black text-neutral-900 mt-1">${product.name}</h2>
@@ -915,6 +988,21 @@
                             </div>
                         </div>
 
+                        <!-- Quantity Selector -->
+                        ${isAvailable ? `
+                            <div class="mt-4 flex items-center justify-between bg-neutral-100 p-3 rounded-2xl">
+                                <div>
+                                    <span class="text-xs font-bold text-neutral-800 block">Cantidad a comprar:</span>
+                                    <span class="text-[10px] text-neutral-500">Máximo disponible: ${maxStock}</span>
+                                </div>
+                                <div class="flex items-center gap-3 bg-white border border-neutral-300 rounded-xl px-2 py-1 shadow-sm">
+                                    <button onclick="updateDetailQty(-1, ${maxStock})" class="w-7 h-7 font-black text-sm text-neutral-700 hover:bg-neutral-100 rounded-lg flex items-center justify-center">-</button>
+                                    <span id="detailQtyDisplay" class="font-black text-sm w-6 text-center">1</span>
+                                    <button onclick="updateDetailQty(1, ${maxStock})" class="w-7 h-7 font-black text-sm text-neutral-700 hover:bg-neutral-100 rounded-lg flex items-center justify-center">+</button>
+                                </div>
+                            </div>
+                        ` : ''}
+
                         <div class="mt-4">
                             <h4 class="text-xs font-bold text-neutral-800 uppercase tracking-wider mb-1">Descripción</h4>
                             <p class="text-xs sm:text-sm text-neutral-600 leading-relaxed bg-white p-3.5 rounded-xl border border-neutral-200">
@@ -925,8 +1013,8 @@
 
                     <!-- Actions -->
                     <div class="pt-2">
-                        ${product.inStock ? `
-                            <button onclick="addToCart('${product.id}'); closeProductDetailModal();" class="w-full py-3 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-2xl flex items-center justify-center gap-2 transition text-sm uppercase tracking-wider shadow-md">
+                        ${isAvailable ? `
+                            <button onclick="addToCart('${product.id}', detailModalSelectedQty); closeProductDetailModal();" class="w-full py-3 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-2xl flex items-center justify-center gap-2 transition text-sm uppercase tracking-wider shadow-md">
                                 <i class="fa-solid fa-cart-plus text-lg"></i> Agregar al Carrito
                             </button>
                         ` : `
@@ -938,6 +1026,18 @@
                 </div>
             `;
             document.getElementById('productDetailModal').classList.remove('hidden');
+        }
+
+        function updateDetailQty(delta, maxStock) {
+            let nextQty = detailModalSelectedQty + delta;
+            if (nextQty < 1) nextQty = 1;
+            if (nextQty > maxStock) {
+                nextQty = maxStock;
+                showToast(`Stock máximo disponible alcanzado (${maxStock})`);
+            }
+            detailModalSelectedQty = nextQty;
+            const display = document.getElementById('detailQtyDisplay');
+            if (display) display.innerText = detailModalSelectedQty;
         }
 
         function setMainGalleryImage(index, url) {
@@ -954,6 +1054,58 @@
         }
 
         function closeProductDetailModal() { document.getElementById('productDetailModal').classList.add('hidden'); }
+
+        // Legal Policy Modals
+        function openPolicyModal(type) {
+            const container = document.getElementById('policyModalContent');
+            if (type === 'privacy') {
+                container.innerHTML = `
+                    <div class="flex items-center gap-2 mb-3 text-black font-black text-base">
+                        <i class="fa-solid fa-user-shield text-emerald-600"></i>
+                        <h3>Políticas de Privacidad</h3>
+                    </div>
+                    <div class="text-xs text-neutral-600 space-y-2 leading-relaxed">
+                        <p>En <strong>Market Junior</strong> respetamos la privacidad de nuestros clientes. Los datos solicitados para envíos y coordinaciones por WhatsApp (como nombre, teléfono y dirección) son utilizados exclusivamente para procesar tu pedido y realizar la entrega de tus productos.</p>
+                        <p>No compartimos ni vendemos tu información personal a terceros. Las transacciones financieras por Pago Móvil o Binance se verifican directamente con comprobantes oficiales.</p>
+                    </div>
+                `;
+            } else if (type === 'shipping') {
+                container.innerHTML = `
+                    <div class="flex items-center gap-2 mb-3 text-black font-black text-base">
+                        <i class="fa-solid fa-truck-fast text-emerald-600"></i>
+                        <h3>Políticas de Envío y Entregas</h3>
+                    </div>
+                    <div class="text-xs text-neutral-600 space-y-2 leading-relaxed">
+                        <p>Ofrecemos entregas personales y servicio de delivery acordado directamente a través de nuestro WhatsApp oficial.</p>
+                        <ul class="list-disc pl-4 space-y-1">
+                            <li><strong>Entregas Personales:</strong> Coordinadas sin costo adicional en zonas céntricas estipuladas.</li>
+                            <li><strong>Delivery a Domicilio:</strong> Aplican tarifas adicionales según la distancia de despacho.</li>
+                            <li><strong>Tiempos de Entrega:</strong> Los pedidos se despachan el mismo día posterior a la confirmación de su Pago Móvil, Binance o pago en efectivo.</li>
+                        </ul>
+                    </div>
+                `;
+            } else if (type === 'terms') {
+                container.innerHTML = `
+                    <div class="flex items-center gap-2 mb-3 text-black font-black text-base">
+                        <i class="fa-solid fa-file-contract text-emerald-600"></i>
+                        <h3>Términos y Condiciones</h3>
+                    </div>
+                    <div class="text-xs text-neutral-600 space-y-2 leading-relaxed">
+                        <p>Al realizar una compra en <strong>Market Junior</strong> aceptas los siguientes términos:</p>
+                        <ul class="list-disc pl-4 space-y-1">
+                            <li><strong>Tasa de Cambio:</strong> Todos los precios expresados en Bolívares (Bs.) se calculan con la Tasa Oficial BCV del día.</li>
+                            <li><strong>Confirmación de Pedido:</strong> Todo pedido está sujeto a la disponibilidad física en inventario al momento de verificar el pago.</li>
+                            <li><strong>Métodos de Pago:</strong> Aceptamos Pago Móvil BNC, Binance Pay (USDT) y Efectivo ($ / Bs).</li>
+                        </ul>
+                    </div>
+                `;
+            }
+            document.getElementById('policyModal').classList.remove('hidden');
+        }
+
+        function closePolicyModal() {
+            document.getElementById('policyModal').classList.add('hidden');
+        }
 
         // Payment Info Modal
         function openPaymentInfoModal() { document.getElementById('paymentModal').classList.remove('hidden'); }
@@ -1002,19 +1154,40 @@
             showToast("Modo administrador cerrado");
         }
 
-        // EXPORT FULL HTML FOR GITHUB PAGES
+        // EXPORT FULL HTML FOR GITHUB PAGES (FORCED CLEAN CUSTOMER VIEW)
         function exportFullHtmlCode() {
-            let currentHtml = document.documentElement.outerHTML;
-            
-            // Inject current active products into the default catalog fallback
-            const productsJson = JSON.stringify(products);
-            const blob = new Blob(["<!DOCTYPE html>\n<html lang=\"es\" class=\"scroll-smooth\">\n" + document.documentElement.innerHTML + "\n</html>"], { type: 'text/html' });
+            // Forcefully hide all admin modals and reset admin state before capturing HTML
+            const wasAdmin = isAdminActive;
+            isAdminActive = false;
+
+            const dashModal = document.getElementById('adminDashboardModal');
+            const authModal = document.getElementById('adminAuthModal');
+            const formModal = document.getElementById('productFormModal');
+            const confirmModal = document.getElementById('confirmModal');
+            const detailModal = document.getElementById('productDetailModal');
+            const policyModal = document.getElementById('policyModal');
+            const cartDrawer = document.getElementById('cartDrawer');
+            const banner = document.getElementById('adminModeBanner');
+
+            const modals = [dashModal, authModal, formModal, confirmModal, detailModal, policyModal, cartDrawer, banner];
+            modals.forEach(m => { if (m) m.classList.add('hidden'); });
+
+            const blob = new Blob([
+                "<!DOCTYPE html>\n<html lang=\"es\" class=\"scroll-smooth\">\n" + document.documentElement.innerHTML + "\n</html>"
+            ], { type: 'text/html' });
+
+            // Restore admin state on current page if user was in admin mode
+            if (wasAdmin) {
+                isAdminActive = true;
+                if (banner) banner.classList.remove('hidden');
+            }
+
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
             a.download = 'index.html';
             a.click();
-            showToast("¡Archivo index.html descargado listo para GitHub!");
+            showToast("¡Archivo index.html exportado limpio para GitHub Pages!");
         }
 
         function exportCatalogCode() {
@@ -1028,7 +1201,7 @@
             showToast("Respaldo del catálogo exportado.");
         }
 
-        // Admin Dashboard
+        // Admin Dashboard Table
         function openAdminDashboard() {
             renderAdminTable();
             document.getElementById('adminDashboardModal').classList.remove('hidden');
@@ -1040,6 +1213,7 @@
             tbody.innerHTML = products.map(p => {
                 const primaryImage = (p.images && p.images.length > 0) ? p.images[0] : 'https://placehold.co/80?text=MJ';
                 const bsVal = formatBolivars(p.price);
+                const stockVal = p.stockQty !== undefined ? p.stockQty : 10;
                 return `
                 <tr class="hover:bg-neutral-50 transition-colors">
                     <td class="p-3">
@@ -1049,9 +1223,10 @@
                     <td class="p-3 text-neutral-600 font-medium">${p.category}</td>
                     <td class="p-3 font-mono font-bold">$${Number(p.price).toFixed(2)} <span class="text-[10px] text-emerald-600 block">Bs. ${bsVal}</span></td>
                     <td class="p-3 text-neutral-600 font-bold">${p.images ? p.images.length : 1} foto(s)</td>
+                    <td class="p-3 font-extrabold text-neutral-800">${stockVal} unid.</td>
                     <td class="p-3">
-                        <span class="px-2 py-0.5 text-[10px] font-bold rounded ${p.inStock ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-800'}">
-                            ${p.inStock ? 'Stock' : 'Agotado'}
+                        <span class="px-2 py-0.5 text-[10px] font-bold rounded ${p.inStock && stockVal > 0 ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-800'}">
+                            ${p.inStock && stockVal > 0 ? 'Disponible' : 'Agotado'}
                         </span>
                     </td>
                     <td class="p-3 text-right space-x-1">
@@ -1086,12 +1261,14 @@
                             const name = row['Título'] || row['Title'] || row['Nombre'] || row['Producto'] || `Producto ${i+1}`;
                             const price = parseFloat(row['Precio'] || row['Price'] || 1.50);
                             const category = row['Categoría'] || row['Category'] || 'Víveres';
+                            const stockQty = parseInt(row['Stock'] || row['Cantidad'] || 15);
                             const imageUrl = row['Imagen'] || row['Image'] || 'https://images.unsplash.com/photo-1583947215259-38e31be8751f?auto=format&fit=crop&w=400&q=80';
 
                             products.unshift({
                                 id: 'excel_' + Date.now() + '_' + i,
                                 name: String(name),
                                 price: isNaN(price) ? 1.50 : price,
+                                stockQty: isNaN(stockQty) ? 15 : stockQty,
                                 category: String(category),
                                 description: 'Importado desde archivo Excel en Market Junior.',
                                 images: [String(imageUrl)],
@@ -1119,6 +1296,7 @@
             document.getElementById('formModalTitle').innerText = "Nuevo Producto";
             document.getElementById('formName').value = "";
             document.getElementById('formPrice').value = "";
+            document.getElementById('formStockQty').value = "15";
             document.getElementById('formCategory').value = "Víveres";
             document.getElementById('formDescription').value = "";
             document.getElementById('formImagesInput').value = "https://images.unsplash.com/photo-1583947215259-38e31be8751f?auto=format&fit=crop&w=400&q=80";
@@ -1134,6 +1312,7 @@
             document.getElementById('formModalTitle').innerText = "Editar Producto";
             document.getElementById('formName').value = p.name;
             document.getElementById('formPrice').value = p.price;
+            document.getElementById('formStockQty').value = p.stockQty !== undefined ? p.stockQty : 10;
             document.getElementById('formCategory').value = p.category;
             document.getElementById('formDescription').value = p.description || "";
             document.getElementById('formImagesInput').value = p.images ? p.images.join(', \n') : "";
@@ -1148,6 +1327,7 @@
             const id = document.getElementById('editProductId').value;
             const name = document.getElementById('formName').value.trim();
             const price = parseFloat(document.getElementById('formPrice').value);
+            const stockQty = parseInt(document.getElementById('formStockQty').value) || 0;
             const category = document.getElementById('formCategory').value.trim();
             const description = document.getElementById('formDescription').value.trim();
             
@@ -1157,12 +1337,12 @@
                 images = ['https://placehold.co/400x300/f5f5f5/737373?text=Market+Junior'];
             }
 
-            const inStock = document.getElementById('formInStock').checked;
+            const inStock = document.getElementById('formInStock').checked && stockQty > 0;
 
             if (id) {
                 const idx = products.findIndex(p => p.id === id);
                 if (idx !== -1) {
-                    products[idx] = { id, name, price, category, description, images, inStock };
+                    products[idx] = { id, name, price, stockQty, category, description, images, inStock };
                     showToast("Producto actualizado exitosamente");
                 }
             } else {
@@ -1170,6 +1350,7 @@
                     id: 'prod_' + Date.now(),
                     name,
                     price,
+                    stockQty,
                     category,
                     description,
                     images,
