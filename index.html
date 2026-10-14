@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts Inter -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <!-- SheetJS for Excel file dynamic upload/download -->
+    <!-- SheetJS for Excel file upload -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     
     <script>
@@ -81,6 +81,13 @@
                         <i class="fa-solid fa-wallet text-xs"></i>
                         <span class="text-[11px] sm:text-xs">Pagos Bs / $</span>
                     </button>
+
+                    <!-- Cart Trigger Button -->
+                    <button onclick="toggleCartDrawer()" class="relative flex items-center gap-2 text-xs font-bold px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-xl bg-black text-white hover:bg-neutral-800 transition-all shadow-md">
+                        <i class="fa-solid fa-cart-shopping text-sm"></i>
+                        <span class="hidden sm:inline">Carrito</span>
+                        <span id="cartBadge" class="bg-emerald-500 text-white text-[10px] font-black w-5 h-5 rounded-full flex items-center justify-center">0</span>
+                    </button>
                 </div>
             </div>
 
@@ -105,7 +112,7 @@
                     Catálogo Oficial Market Junior
                 </h1>
                 <p class="mt-2 text-neutral-400 text-xs sm:text-sm leading-relaxed">
-                    Consulta precios en Dólares y Bolívares. Pide al instante por WhatsApp con Pago Móvil, Binance o Efectivo.
+                    Arma tu carrito, consulta precios en Dólares y Bolívares. Pide al instante por WhatsApp con Pago Móvil, Binance o Efectivo.
                 </p>
                 <div class="mt-4 flex flex-wrap gap-2 justify-center md:justify-start">
                     <a href="https://wa.me/584243800296?text=¡Hola%20Market%20Junior!%20Quisiera%20consultar%20sobre%20el%20catálogo%20actual." target="_blank" class="px-4 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-xl transition flex items-center gap-2 shadow-md text-xs">
@@ -177,6 +184,55 @@
             <p class="text-xs text-neutral-500 mt-1">Prueba con otra búsqueda o categoría.</p>
         </div>
     </main>
+
+    <!-- Cart Slide-over Drawer -->
+    <div id="cartDrawer" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-50 hidden transition-opacity">
+        <div class="absolute inset-y-0 right-0 max-w-full flex pl-10">
+            <div class="w-screen max-w-md bg-white shadow-2xl flex flex-col justify-between">
+                
+                <!-- Drawer Header -->
+                <div class="p-4 sm:p-5 bg-black text-white flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-cart-shopping text-emerald-400 text-base"></i>
+                        <h2 class="text-base font-black tracking-tight">Tu Carrito de Compras</h2>
+                    </div>
+                    <button onclick="toggleCartDrawer()" class="w-8 h-8 rounded-full bg-neutral-800 text-neutral-300 hover:text-white flex items-center justify-center transition">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+
+                <!-- Cart Items Container -->
+                <div id="cartItemsContainer" class="p-4 flex-1 overflow-y-auto space-y-3 divide-y divide-neutral-100">
+                    <!-- Dynamic cart items go here -->
+                </div>
+
+                <!-- Drawer Footer & Order Trigger -->
+                <div class="p-4 sm:p-5 bg-neutral-50 border-t border-neutral-200 space-y-3">
+                    <div class="space-y-1.5">
+                        <div class="flex justify-between text-xs text-neutral-500 font-semibold">
+                            <span>Subtotal en Dólares:</span>
+                            <span id="cartSubtotalUsd" class="font-black text-black">$0.00</span>
+                        </div>
+                        <div class="flex justify-between text-sm font-extrabold text-neutral-900 border-t border-neutral-200 pt-2">
+                            <span>Total Estimado (BCV):</span>
+                            <div class="text-right">
+                                <span id="cartTotalBs" class="block text-emerald-600 font-black text-base">Bs. 0.00</span>
+                                <span id="cartTotalUsd" class="text-[11px] text-neutral-400 font-bold">$0.00 USD</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <a id="cartWhatsappBtn" href="#" target="_blank" onclick="sendCartToWhatsapp(event)" class="w-full py-3.5 bg-emerald-500 hover:bg-emerald-600 text-white font-black rounded-xl transition flex items-center justify-center gap-2 shadow-lg text-xs uppercase tracking-wider">
+                        <i class="fa-brands fa-whatsapp text-base"></i> Enviar Pedido por WhatsApp
+                    </a>
+                    
+                    <button onclick="clearCart()" class="w-full text-[11px] text-neutral-400 hover:text-red-600 font-bold text-center transition py-1">
+                        Vaciar Carrito
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Modal: Product Details with Multiple Photos -->
     <div id="productDetailModal" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 hidden flex items-center justify-center p-3 sm:p-6">
@@ -279,11 +335,14 @@
                     </div>
                     <div>
                         <h2 class="text-lg font-black leading-tight">Panel Secreto de Administración</h2>
-                        <p class="text-xs text-neutral-400">Market Junior • Control Total con Múltiples Fotos y Tasa BCV</p>
+                        <p class="text-xs text-neutral-400">Market Junior • Edición y exportación de archivo HTML</p>
                     </div>
                 </div>
                 <div class="flex flex-wrap items-center gap-2 w-full sm:w-auto">
-                    <button onclick="exportCatalogCode()" class="bg-neutral-800 hover:bg-neutral-700 text-white text-xs font-bold px-3 py-2.5 rounded-xl transition flex items-center gap-1.5 border border-neutral-700" title="Exportar respaldo JSON para GitHub">
+                    <button onclick="exportFullHtmlCode()" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-3 py-2.5 rounded-xl transition flex items-center gap-1.5 shadow-md" title="Guardar cambios para GitHub Pages">
+                        <i class="fa-solid fa-file-code"></i> Guardar HTML para Publicar
+                    </button>
+                    <button onclick="exportCatalogCode()" class="bg-neutral-800 hover:bg-neutral-700 text-white text-xs font-bold px-3 py-2.5 rounded-xl transition flex items-center gap-1.5 border border-neutral-700" title="Exportar respaldo JSON">
                         <i class="fa-solid fa-code text-amber-400"></i> Exportar JSON
                     </button>
                     <label class="cursor-pointer bg-neutral-800 hover:bg-neutral-700 text-white text-xs font-bold px-3 py-2.5 rounded-xl transition flex items-center gap-1.5 border border-neutral-700">
@@ -435,6 +494,7 @@
 
         let currentBcvRate = 36.50; // Fallback rate until API responds
         let products = [];
+        let cart = []; // Shopping Cart Array
         let selectedCategory = "Todos";
         let searchQuery = "";
         let logoClickCount = 0;
@@ -449,6 +509,7 @@
         window.addEventListener('DOMContentLoaded', async () => {
             await fetchBcvRate();
             loadProducts();
+            loadCart();
             renderCategories();
             renderProducts();
             setupKeyboardShortcuts();
@@ -470,6 +531,7 @@
             
             document.getElementById('bcvStatusLabel').innerText = `Tasa BCV: Bs. ${currentBcvRate.toFixed(2)} / $`;
             document.getElementById('heroRateDisplay').innerText = `BCV: Bs. ${currentBcvRate.toFixed(2)}`;
+            renderCart();
         }
 
         function formatBolivars(usdPrice) {
@@ -520,6 +582,134 @@
 
         function saveProducts() {
             localStorage.setItem('market_junior_full_catalog_v5', JSON.stringify(products));
+        }
+
+        // --- SHOPPING CART SYSTEM ---
+        function loadCart() {
+            const savedCart = localStorage.getItem('mj_shopping_cart');
+            if (savedCart) {
+                try { cart = JSON.parse(savedCart); } catch(e) { cart = []; }
+            }
+            renderCart();
+        }
+
+        function saveCart() {
+            localStorage.setItem('mj_shopping_cart', JSON.stringify(cart));
+            renderCart();
+        }
+
+        function addToCart(productId) {
+            const product = products.find(p => p.id === productId);
+            if (!product || !product.inStock) return;
+
+            const existingIndex = cart.findIndex(item => item.id === productId);
+            if (existingIndex !== -1) {
+                cart[existingIndex].qty += 1;
+            } else {
+                cart.push({ id: product.id, name: product.name, price: product.price, image: (product.images && product.images[0]) ? product.images[0] : 'https://placehold.co/100', qty: 1 });
+            }
+
+            saveCart();
+            showToast(`¡${product.name} agregado al carrito!`);
+        }
+
+        function changeCartQty(productId, delta) {
+            const index = cart.findIndex(item => item.id === productId);
+            if (index !== -1) {
+                cart[index].qty += delta;
+                if (cart[index].qty <= 0) {
+                    cart.splice(index, 1);
+                }
+                saveCart();
+            }
+        }
+
+        function removeFromCart(productId) {
+            cart = cart.filter(item => item.id !== productId);
+            saveCart();
+        }
+
+        function clearCart() {
+            cart = [];
+            saveCart();
+        }
+
+        function toggleCartDrawer() {
+            document.getElementById('cartDrawer').classList.toggle('hidden');
+        }
+
+        function renderCart() {
+            const container = document.getElementById('cartItemsContainer');
+            const totalQty = cart.reduce((sum, item) => sum + item.qty, 0);
+            document.getElementById('cartBadge').innerText = totalQty;
+
+            if (cart.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-12 text-neutral-400 space-y-2">
+                        <i class="fa-solid fa-cart-flatbed text-3xl"></i>
+                        <p class="text-xs font-bold text-neutral-600">Tu carrito está vacío</p>
+                        <p class="text-[11px]">Agrega productos del catálogo para realizar tu pedido.</p>
+                    </div>
+                `;
+                document.getElementById('cartSubtotalUsd').innerText = "$0.00";
+                document.getElementById('cartTotalBs').innerText = "Bs. 0.00";
+                document.getElementById('cartTotalUsd').innerText = "$0.00 USD";
+                return;
+            }
+
+            let subtotalUsd = 0;
+
+            container.innerHTML = cart.map(item => {
+                const itemTotalUsd = item.price * item.qty;
+                subtotalUsd += itemTotalUsd;
+                return `
+                    <div class="flex items-center justify-between gap-3 pt-3">
+                        <img src="${item.image}" class="w-12 h-12 rounded-xl object-cover border border-neutral-200">
+                        <div class="flex-1 min-w-0">
+                            <h4 class="text-xs font-bold text-neutral-900 truncate">${item.name}</h4>
+                            <div class="text-[11px] font-extrabold text-neutral-600">$${item.price.toFixed(2)} c/u</div>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="flex items-center border border-neutral-200 rounded-lg overflow-hidden bg-neutral-50">
+                                <button onclick="changeCartQty('${item.id}', -1)" class="px-2 py-0.5 text-xs font-black hover:bg-neutral-200">-</button>
+                                <span class="px-2 text-xs font-bold">${item.qty}</span>
+                                <button onclick="changeCartQty('${item.id}', 1)" class="px-2 py-0.5 text-xs font-black hover:bg-neutral-200">+</button>
+                            </div>
+                            <button onclick="removeFromCart('${item.id}')" class="text-neutral-400 hover:text-red-600 text-xs p-1">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            const totalBsFormatted = formatBolivars(subtotalUsd);
+            document.getElementById('cartSubtotalUsd').innerText = `$${subtotalUsd.toFixed(2)}`;
+            document.getElementById('cartTotalBs').innerText = `Bs. ${totalBsFormatted}`;
+            document.getElementById('cartTotalUsd').innerText = `$${subtotalUsd.toFixed(2)} USD`;
+        }
+
+        function sendCartToWhatsapp(e) {
+            e.preventDefault();
+            if (cart.length === 0) {
+                showToast("El carrito está vacío");
+                return;
+            }
+
+            let message = `¡Hola Market Junior! 👋 Deseo realizar la siguiente compra:\n\n🛒 *RESUMEN DEL PEDIDO:*\n`;
+            let totalUsd = 0;
+
+            cart.forEach((item, index) => {
+                const itemTotal = item.price * item.qty;
+                totalUsd += itemTotal;
+                message += `${index + 1}. *${item.name}* (x${item.qty}) - $${itemTotal.toFixed(2)}\n`;
+            });
+
+            const totalBsFormatted = formatBolivars(totalUsd);
+            message += `\n💰 *TOTAL A PAGAR:*\n• USD: *$${totalUsd.toFixed(2)}*\n• BCV: *Bs. ${totalBsFormatted}* (Tasa: ${currentBcvRate.toFixed(2)})\n\nPor favor confirmen disponibilidad y datos de pago.`;
+
+            const waUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+            window.open(waUrl, '_blank');
         }
 
         function triggerResetDefaultProducts() {
@@ -598,8 +788,6 @@
             grid.innerHTML = filtered.map(product => {
                 const primaryImage = (product.images && product.images.length > 0 && product.images[0]) ? product.images[0] : 'https://placehold.co/300x200/f5f5f5/737373?text=Market+Junior';
                 const bsVal = formatBolivars(product.price);
-                const waMessage = encodeURIComponent(`¡Hola Market Junior! 👋 Quisiera solicitar:\n\n📌 *Producto:* ${product.name}\n💰 *Precio:* $${Number(product.price).toFixed(2)} (Bs. ${bsVal})\n\n¿Tienen disponibilidad?`);
-                const waUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${waMessage}`;
 
                 return `
                 <div class="product-card bg-white rounded-2xl border border-neutral-200/90 overflow-hidden flex flex-col justify-between relative group cursor-pointer" onclick="openProductDetail('${product.id}')">
@@ -656,10 +844,10 @@
                     <!-- Button -->
                     <div class="p-2.5 pt-0" onclick="event.stopPropagation()">
                         ${product.inStock ? `
-                            <a href="${waUrl}" target="_blank" 
+                            <button onclick="addToCart('${product.id}')" 
                                 class="w-full py-2 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-xl flex items-center justify-center gap-1.5 transition text-[11px] uppercase tracking-wider shadow-sm">
-                                <i class="fa-brands fa-whatsapp text-xs"></i> Pedir
-                            </a>
+                                <i class="fa-solid fa-cart-plus text-xs"></i> Agregar
+                            </button>
                         ` : `
                             <button disabled class="w-full py-2 bg-neutral-100 text-neutral-400 font-bold rounded-xl text-[10px] uppercase cursor-not-allowed">
                                 Agotado
@@ -680,8 +868,6 @@
             activeGalleryIndex = 0;
             const images = (product.images && product.images.length > 0) ? product.images : ['https://placehold.co/400x300/f5f5f5/737373?text=Market+Junior'];
             const bsVal = formatBolivars(product.price);
-            const waMessage = encodeURIComponent(`¡Hola Market Junior! 👋 Quisiera solicitar detalles y comprar:\n\n📌 *Producto:* ${product.name}\n💰 *Precio:* $${Number(product.price).toFixed(2)} (Bs. ${bsVal})\n\n¿Me confirma disponibilidad?`);
-            const waUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${waMessage}`;
 
             const container = document.getElementById('detailModalContent');
             container.innerHTML = `
@@ -740,9 +926,9 @@
                     <!-- Actions -->
                     <div class="pt-2">
                         ${product.inStock ? `
-                            <a href="${waUrl}" target="_blank" class="w-full py-3 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-2xl flex items-center justify-center gap-2 transition text-sm uppercase tracking-wider shadow-md">
-                                <i class="fa-brands fa-whatsapp text-lg"></i> Pedir por WhatsApp
-                            </a>
+                            <button onclick="addToCart('${product.id}'); closeProductDetailModal();" class="w-full py-3 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-2xl flex items-center justify-center gap-2 transition text-sm uppercase tracking-wider shadow-md">
+                                <i class="fa-solid fa-cart-plus text-lg"></i> Agregar al Carrito
+                            </button>
                         ` : `
                             <button disabled class="w-full py-3 bg-neutral-100 text-neutral-400 font-bold rounded-2xl text-xs uppercase cursor-not-allowed">
                                 Producto Agotado Temporalmente
@@ -814,6 +1000,21 @@
             closeAdminDashboard();
             renderProducts();
             showToast("Modo administrador cerrado");
+        }
+
+        // EXPORT FULL HTML FOR GITHUB PAGES
+        function exportFullHtmlCode() {
+            let currentHtml = document.documentElement.outerHTML;
+            
+            // Inject current active products into the default catalog fallback
+            const productsJson = JSON.stringify(products);
+            const blob = new Blob(["<!DOCTYPE html>\n<html lang=\"es\" class=\"scroll-smooth\">\n" + document.documentElement.innerHTML + "\n</html>"], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'index.html';
+            a.click();
+            showToast("¡Archivo index.html descargado listo para GitHub!");
         }
 
         function exportCatalogCode() {
