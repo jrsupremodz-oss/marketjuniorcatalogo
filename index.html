@@ -271,11 +271,22 @@
 
     <!-- Seccion Principal del Catálogo -->
     <main class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 py-6 flex-grow w-full">
-        <div class="flex items-center justify-between pb-4 mb-4 border-b border-neutral-200">
-            <span class="text-xs font-bold text-neutral-500">
-                Catálogo de Productos
-            </span>
-            <div class="flex items-center gap-3 text-xs font-bold text-neutral-500">
+        <div class="flex flex-wrap items-center justify-between gap-2 pb-4 mb-4 border-b border-neutral-200">
+            <div class="flex items-center gap-2">
+                <span class="text-xs font-bold text-neutral-500">
+                    Catálogo de Productos
+                </span>
+                <span id="personalizationBadge" class="hidden text-[10px] font-extrabold bg-emerald-50 text-emerald-700 border border-emerald-200 px-2 py-0.5 rounded-full">
+                    ✨ Adaptado a tus intereses
+                </span>
+            </div>
+            <div class="flex items-center gap-2 text-xs font-bold text-neutral-500">
+                <select id="sortSelect" onchange="changeCatalogSort(this.value)" aria-label="Ordenar catálogo" class="bg-white border border-neutral-300 text-neutral-800 text-[11px] font-bold px-2.5 py-1.5 rounded-xl focus:outline-none focus:border-black cursor-pointer">
+                    <option value="recommended">✨ Orden: Para ti (Recomendados)</option>
+                    <option value="default">📋 Orden: Catálogo Original</option>
+                    <option value="price_asc">💲 Precio: Menor a Mayor</option>
+                    <option value="price_desc">💎 Precio: Mayor a Menor</option>
+                </select>
                 <span class="bg-neutral-200/60 px-3 py-1.5 rounded-xl text-black">
                     Mostrando <strong id="productCount" class="font-black text-black">0</strong> productos
                 </span>
@@ -700,9 +711,120 @@
         let currentBcvRate = 36.50;
         let cart = [];
         let searchQuery = "";
+        let catalogSortMode = "recommended";
         let hasOpenedCartFirstTime = false;
         let checkoutItems = [];
         let isSingleItemCheckout = false;
+
+        // =========================================================================
+        // ALGORITMO DE RECOMENDACIÓN BASADO EN INTERESES (LOCALSTORAGE)
+        // =========================================================================
+        const INTEREST_STORAGE_KEY = "mj_user_interest_profile_v1";
+        const STOP_WORDS = new Set([
+            "para", "con", "sin", "por", "los", "las", "del", "una", "uno", "unos", "unas",
+            "que", "como", "mas", "pero", "sus", "este", "esta", "estos", "estas", "todo",
+            "toda", "todos", "todas", "sobre", "entre", "hasta", "desde", "piezas", "pcs",
+            "kit", "set", "mini", "tipo", "alta", "uso", "nuevo", "original"
+        ]);
+
+        let userInterestProfile = {
+            keywords: {},   // { palabra: puntaje }
+            viewedIds: {},  // { prod_id: veces_visto }
+            totalSignals: 0
+        };
+
+        function loadInterestProfile() {
+            try {
+                const raw = localStorage.getItem(INTEREST_STORAGE_KEY);
+                if (raw) {
+                    const parsed = JSON.parse(raw);
+                    if (parsed && typeof parsed === "object") {
+                        userInterestProfile = {
+                            keywords: parsed.keywords || {},
+                            viewedIds: parsed.viewedIds || {},
+                            totalSignals: parsed.totalSignals || 0
+                        };
+                    }
+                }
+            } catch (e) {
+                console.warn("No se pudo cargar perfil de intereses:", e);
+            }
+        }
+
+        function saveInterestProfile() {
+            try {
+                localStorage.setItem(INTEREST_STORAGE_KEY, JSON.stringify(userInterestProfile));
+            } catch (e) {
+                console.warn("No se pudo guardar perfil de intereses:", e);
+            }
+        }
+
+        function extractKeywords(text) {
+            return String(text || "")
+                .toLowerCase()
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "")
+                .replace(/[^a-z0-9\s]/g, " ")
+                .split(/\s+/)
+                .filter(w => w.length >= 3 && !STOP_WORDS.has(w) && !/^\d+$/.test(w));
+        }
+
+        function trackInterestFromText(text, weight = 1) {
+            const words = extractKeywords(text);
+            if (words.length === 0) return;
+            words.forEach(word => {
+                userInterestProfile.keywords[word] = (userInterestProfile.keywords[word] || 0) + weight;
+            });
+            userInterestProfile.totalSignals += weight;
+            saveInterestProfile();
+        }
+
+        function trackProductInterest(product, weight = 2) {
+            if (!product) return;
+            trackInterestFromText(product.name, weight);
+            userInterestProfile.viewedIds[product.id] = (userInterestProfile.viewedIds[product.id] || 0) + 1;
+            saveInterestProfile();
+        }
+
+        function computeProductAffinityScore(product) {
+            if (!userInterestProfile || userInterestProfile.totalSignals === 0) return 0;
+            const words = extractKeywords(product.name);
+            let score = 0;
+            words.forEach(w => {
+                if (userInterestProfile.keywords[w]) {
+                    score += userInterestProfile.keywords[w];
+                }
+            });
+            // Pequeño impulso adicional si el usuario ya interactuó con este artículo
+            if (userInterestProfile.viewedIds[product.id]) {
+                score += Math.min(userInterestProfile.viewedIds[product.id] * 1.5, 6);
+            }
+            return score;
+        }
+
+        function getRelatedProducts(baseProduct, limit = 3) {
+            const baseWords = new Set(extractKeywords(baseProduct.name));
+            return products
+                .filter(p => p.id !== baseProduct.id && isProductAvailable(p))
+                .map(candidate => {
+                    const candWords = extractKeywords(candidate.name);
+                    let overlap = 0;
+                    candWords.forEach(w => {
+                        if (baseWords.has(w)) overlap += 3;
+                    });
+                    // Suma también afinidad general del usuario
+                    const userScore = computeProductAffinityScore(candidate) * 0.25;
+                    return { product: candidate, score: overlap + userScore };
+                })
+                .sort((a, b) => b.score - a.score)
+                .slice(0, limit)
+                .map(item => item.product);
+        }
+
+        function changeCatalogSort(mode) {
+            catalogSortMode = mode;
+            renderProducts();
+        }
 
         /*
           NOTA DE USO:
@@ -907,6 +1029,7 @@
 
         window.addEventListener('DOMContentLoaded', async () => {
             try {
+                loadInterestProfile();
                 loadCart();
                 renderProducts();
                 highlightProductFromHash();
@@ -975,6 +1098,9 @@
                 return;
             }
 
+            // Registrar alta intención de compra (+5 pts)
+            trackProductInterest(product, 5);
+
             const existingIndex = cart.findIndex(item => item.id === productId);
             const currentQtyInCart = existingIndex !== -1 ? cart[existingIndex].qty : 0;
 
@@ -1021,6 +1147,8 @@
                 showToast("Este producto está agotado.");
                 return;
             }
+            // Registrar máxima intención de compra (+6 pts)
+            trackProductInterest(product, 6);
             isSingleItemCheckout = true;
             checkoutItems = [{
                 id: product.id,
@@ -1287,55 +1415,67 @@
 
             let subtotalUsd = 0;
             container.innerHTML = cart.map(item => {
-                const itemTotal = item.price * item.qty;
-                subtotalUsd += itemTotal;
+                const lineTotal = item.price * item.qty;
+                subtotalUsd += lineTotal;
                 return `
-                    <div class="flex items-center justify-between gap-2 pt-3">
-                        <div class="w-12 h-12 rounded-xl bg-neutral-100 border border-neutral-200 overflow-hidden shrink-0 p-1 flex items-center justify-center">
-                            <img src="${item.image}" class="w-full h-full object-contain">
-                        </div>
+                    <div class="py-3 flex items-center gap-3">
+                        <img src="${item.image}" alt="${item.name}" class="w-14 h-14 rounded-xl object-contain bg-neutral-50 border border-neutral-200 p-1 shrink-0">
                         <div class="flex-1 min-w-0">
                             <h4 class="text-xs font-bold text-neutral-900 truncate">${item.name}</h4>
-                            <div class="flex items-center gap-2 mt-0.5">
-                                <span class="text-xs font-extrabold text-neutral-800">$${item.price.toFixed(2)}</span>
-                                ${item.originalPrice ? `<span class="text-[10px] text-neutral-400 line-through">$${item.originalPrice.toFixed(2)}</span>` : ''}
+                            <p class="text-[11px] font-black text-emerald-600 mt-0.5">$${item.price.toFixed(2)} • Bs. ${formatBolivars(lineTotal)}</p>
+                            <div class="flex items-center gap-2 mt-1.5">
+                                <div class="flex items-center bg-neutral-100 rounded-lg p-0.5">
+                                    <button onclick="updateCartQty('${item.id}', -1)" class="w-6 h-6 bg-white rounded-md font-bold text-xs shadow-xs hover:bg-neutral-200">-</button>
+                                    <span class="px-2.5 text-xs font-black">${item.qty}</span>
+                                    <button onclick="updateCartQty('${item.id}', 1)" class="w-6 h-6 bg-white rounded-md font-bold text-xs shadow-xs hover:bg-neutral-200">+</button>
+                                </div>
+                                <button onclick="removeFromCart('${item.id}')" class="text-[11px] text-neutral-400 hover:text-red-600 font-bold ml-auto">
+                                    <i class="fa-solid fa-trash-can"></i>
+                                </button>
                             </div>
-                            <div class="text-[10px] text-emerald-600 font-bold truncate">Bs. ${formatBolivars(itemTotal)}</div>
-                        </div>
-                        <div class="flex items-center gap-1 bg-neutral-100 p-1 rounded-xl shrink-0">
-                            <button onclick="updateCartQty('${item.id}', -1)" class="w-6 h-6 bg-white rounded-lg text-xs font-bold shadow-xs hover:bg-neutral-200 flex items-center justify-center text-neutral-800">-</button>
-                            <span class="text-xs font-black min-w-[20px] text-center px-1 text-neutral-900">${item.qty}</span>
-                            <button onclick="updateCartQty('${item.id}', 1)" class="w-6 h-6 bg-white rounded-lg text-xs font-bold shadow-xs hover:bg-neutral-200 flex items-center justify-center text-neutral-800">+</button>
                         </div>
                     </div>
                 `;
             }).join('');
 
-            const totalBsFormatted = formatBolivars(subtotalUsd);
             document.getElementById('cartSubtotalUsd').innerText = `$${subtotalUsd.toFixed(2)}`;
-            document.getElementById('cartTotalBs').innerText = `Bs. ${totalBsFormatted}`;
+            document.getElementById('cartTotalBs').innerText = `Bs. ${formatBolivars(subtotalUsd)}`;
             document.getElementById('cartTotalUsd').innerText = `$${subtotalUsd.toFixed(2)} USD`;
         }
 
         function updateCartQty(productId, delta) {
-            const index = cart.findIndex(item => item.id === productId);
-            if (index !== -1) {
-                const product = products.find(p => p.id === productId);
-                if (delta > 0 && product && cart[index].qty + delta > product.stock) {
-                    showToast(`Límite alcanzado (${product.stock} disponibles)`);
-                    return;
-                }
-                cart[index].qty += delta;
-                if (cart[index].qty <= 0) {
-                    cart.splice(index, 1);
-                }
-                saveCart();
+            const idx = cart.findIndex(item => item.id === productId);
+            if (idx === -1) return;
+            const prod = products.find(p => p.id === productId);
+            const maxStock = prod ? prod.stock : 99;
+            const newQty = cart[idx].qty + delta;
+
+            if (newQty <= 0) {
+                cart.splice(idx, 1);
+            } else if (newQty > maxStock) {
+                showToast(`Solo quedan ${maxStock} unidades disponibles`);
+                return;
+            } else {
+                cart[idx].qty = newQty;
             }
+            saveCart();
         }
 
+        function removeFromCart(productId) {
+            cart = cart.filter(item => item.id !== productId);
+            saveCart();
+        }
+
+        let searchTrackTimer = null;
         function filterProducts() {
             const input = document.getElementById('searchInput');
             searchQuery = input ? input.value.toLowerCase() : "";
+            clearTimeout(searchTrackTimer);
+            if (searchQuery.trim().length >= 3) {
+                searchTrackTimer = setTimeout(() => {
+                    trackInterestFromText(searchQuery, 3);
+                }, 700);
+            }
             renderProducts();
         }
 
@@ -1351,8 +1491,41 @@
         function renderProducts() {
             const grid = document.getElementById('productGrid');
             const emptyState = document.getElementById('emptyState');
+            const badgeEl = document.getElementById('personalizationBadge');
 
-            const filtered = products.filter(p => p.name.toLowerCase().includes(searchQuery));
+            const hasPersonalization = userInterestProfile.totalSignals >= 2;
+            if (badgeEl) {
+                if (hasPersonalization && catalogSortMode === "recommended") {
+                    badgeEl.classList.remove('hidden');
+                } else {
+                    badgeEl.classList.add('hidden');
+                }
+            }
+
+            let filtered = products
+                .map((p, idx) => ({
+                    product: p,
+                    originalIndex: idx,
+                    affinityScore: computeProductAffinityScore(p)
+                }))
+                .filter(entry => entry.product.name.toLowerCase().includes(searchQuery));
+
+            if (catalogSortMode === "recommended") {
+                filtered.sort((a, b) => {
+                    const aAvail = isProductAvailable(a.product) ? 1 : 0;
+                    const bAvail = isProductAvailable(b.product) ? 1 : 0;
+                    if (aAvail !== bAvail) return bAvail - aAvail;
+                    if (hasPersonalization && b.affinityScore !== a.affinityScore) {
+                        return b.affinityScore - a.affinityScore;
+                    }
+                    return a.originalIndex - b.originalIndex;
+                });
+            } else if (catalogSortMode === "price_asc") {
+                filtered.sort((a, b) => a.product.price - b.product.price);
+            } else if (catalogSortMode === "price_desc") {
+                filtered.sort((a, b) => b.product.price - a.product.price);
+            }
+
             document.getElementById('productCount').innerText = filtered.length;
 
             if (filtered.length === 0) {
@@ -1363,7 +1536,9 @@
 
             emptyState.classList.add('hidden');
 
-            grid.innerHTML = filtered.map(product => {
+            grid.innerHTML = filtered.map(entry => {
+                const product = entry.product;
+                const isRecommendedMatch = hasPersonalization && catalogSortMode === "recommended" && entry.affinityScore >= 4 && isProductAvailable(product);
                 const discount = calculateDiscount(product.price, product.originalPrice);
                 const hasStock = isProductAvailable(product);
                 const directUrl = `https://marketjunior.com/#${product.slug}`;
@@ -1376,9 +1551,13 @@
                             <span class="absolute top-4 left-4 bg-red-600 text-white text-[10px] font-black px-2 py-0.5 rounded-md z-10 shadow-sm">
                                 -${discount}% OFF
                             </span>
-                        ` : ''}
+                        ` : (isRecommendedMatch ? `
+                            <span class="absolute top-3.5 left-3.5 bg-neutral-900/90 text-amber-300 text-[9px] font-extrabold px-2 py-0.5 rounded-md z-10 shadow-xs">
+                                ✨ Para ti
+                            </span>
+                        ` : '')}
 
-                        <a href="${waShareUrl}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()" title="Compartir por WhatsApp" aria-label="Compartir ${product.name} por WhatsApp" class="w-7 h-7 rounded-full bg-emerald-50 hover:bg-emerald-500 text-emerald-600 hover:text-white border border-emerald-200/80 flex items-center justify-center transition-colors shadow-xs z-10 absolute top-3.5 right-3.5">
+                        <a href="${waShareUrl}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation(); trackProductInterest(products.find(x => x.id === '${product.id}'), 4);" title="Compartir por WhatsApp" aria-label="Compartir ${product.name} por WhatsApp" class="w-7 h-7 rounded-full bg-emerald-50 hover:bg-emerald-500 text-emerald-600 hover:text-white border border-emerald-200/80 flex items-center justify-center transition-colors shadow-xs z-10 absolute top-3.5 right-3.5">
                             <i class="fa-brands fa-whatsapp text-xs"></i>
                         </a>
 
@@ -1435,10 +1614,27 @@
             const product = products.find(p => p.id === productId);
             if (!product) return;
 
+            // Registrar interés por visualización (+2 pts) y refrescar afinidad
+            trackProductInterest(product, 2);
+
             const discount = calculateDiscount(product.price, product.originalPrice);
             const content = document.getElementById('detailModalContent');
             const hasStock = isProductAvailable(product);
             const productReviews = getReviewsForProduct(product);
+            const relatedProducts = getRelatedProducts(product, 3);
+
+            const relatedHtml = relatedProducts.map(rel => `
+                <div onclick="openProductDetailModal('${rel.id}')" class="cursor-pointer bg-neutral-50 hover:bg-white border border-neutral-200 hover:border-black rounded-xl p-2 flex flex-col justify-between transition group">
+                    <div class="h-16 bg-white rounded-lg p-1.5 flex items-center justify-center mb-1.5 border border-neutral-100">
+                        <img src="${rel.image}" alt="${rel.name}" class="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform">
+                    </div>
+                    <p class="text-[10px] font-bold text-neutral-900 line-clamp-2 leading-tight mb-1">${rel.name}</p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-[11px] font-black text-black">$${rel.price.toFixed(2)}</span>
+                        <span class="text-[9px] font-extrabold text-emerald-600">Bs. ${formatBolivars(rel.price)}</span>
+                    </div>
+                </div>
+            `).join('');
 
             const reviewsHtml = productReviews.map(rev => {
                 const stars = Array.from({ length: 5 }, (_, idx) =>
@@ -1529,9 +1725,27 @@
                             ${reviewsHtml}
                         </div>
                     </div>
+
+                    <!-- Sección de Productos Relacionados según interés -->
+                    ${relatedProducts.length > 0 ? `
+                        <div class="border-t border-neutral-200 pt-4">
+                            <div class="flex items-center justify-between mb-2.5">
+                                <span class="text-xs font-black text-neutral-900">✨ También te puede interesar</span>
+                                <span class="text-[10px] font-semibold text-neutral-400">Seleccionados para ti</span>
+                            </div>
+                            <div class="grid grid-cols-3 gap-2">
+                                ${relatedHtml}
+                            </div>
+                        </div>
+                    ` : ''}
                 </div>
             `;
             document.getElementById('productDetailModal').classList.remove('hidden');
+        }
+
+        function closeProductDetailModal() {
+            document.getElementById('productDetailModal').classList.add('hidden');
+            renderProducts();
         }
 
         function closeProductDetailModal() {
