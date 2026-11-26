@@ -15,6 +15,25 @@
     <link rel="icon" type="image/jpeg" href="https://i.imgur.com/HNuWYPn.jpeg">
     <link rel="apple-touch-icon" href="https://i.imgur.com/HNuWYPn.jpeg">
 
+    <!-- Meta Pixel Code (ID: 1196814618515553) -->
+    <script>
+        !function(f,b,e,v,n,t,s)
+        {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+        n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+        if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+        n.queue=[];t=b.createElement(e);t.async=!0;
+        t.src=v;s=b.getElementsByTagName(e)[0];
+        s.parentNode.insertBefore(t,s)}(window, document,'script',
+        'https://connect.facebook.net/en_US/fbevents.js');
+        fbq('init', '1196814618515553');
+        fbq('track', 'PageView');
+    </script>
+    <noscript>
+        <img height="1" width="1" style="display:none"
+        src="https://www.facebook.com/tr?id=1196814618515553&ev=PageView&noscript=1"/>
+    </noscript>
+    <!-- End Meta Pixel Code -->
+
     <!-- Web App Manifest Dynamic Data URI -->
     <script>
         const manifestData = {
@@ -404,27 +423,11 @@
                     <div>
                         <label for="chkWhatsapp" class="block font-bold text-neutral-800 mb-1">Número de WhatsApp <span class="text-red-500">*</span></label>
                         <div class="flex items-center border border-neutral-300 rounded-xl overflow-hidden focus-within:border-sky-500 focus-within:ring-2 focus-within:ring-sky-500/20 bg-white transition">
-                            <span class="px-3 py-2.5 bg-neutral-100 text-emerald-600 border-r border-neutral-200">
+                            <span class="px-3.5 py-2.5 bg-neutral-100 text-emerald-600 border-r border-neutral-200">
                                 <i class="fa-brands fa-whatsapp text-sm"></i>
                             </span>
                             <input type="tel" id="chkWhatsapp" required placeholder="Ej. 0414 123 4567" class="w-full px-3 py-2.5 text-xs font-medium text-neutral-900 focus:outline-none">
                         </div>
-                    </div>
-                </div>
-
-                <!-- Agencia de Envío (Desplegable) -->
-                <div>
-                    <label for="chkAgency" class="block font-bold text-neutral-800 mb-1">Agencia de envío (Cobro a Destino) <span class="text-red-500">*</span></label>
-                    <div class="relative">
-                        <select id="chkAgency" required class="w-full appearance-none pl-10 pr-8 py-2.5 border border-neutral-300 rounded-xl text-xs font-semibold text-neutral-900 bg-white focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20 transition">
-                            <option value="" disabled selected>Selecciona la agencia de envío</option>
-                            <option value="MRW">MRW (Cobro a Destino)</option>
-                            <option value="Zoom">Zoom (Cobro a Destino)</option>
-                            <option value="Tealca">Tealca (Cobro a Destino)</option>
-                            <option value="Domesa">Domesa (Cobro a Destino)</option>
-                        </select>
-                        <i class="fa-solid fa-truck-fast absolute left-3.5 top-3 text-sky-600 text-xs pointer-events-none"></i>
-                        <i class="fa-solid fa-chevron-down absolute right-3.5 top-3 text-neutral-400 text-xs pointer-events-none"></i>
                     </div>
                 </div>
 
@@ -433,7 +436,7 @@
                     <div>
                         <label for="chkState" class="block font-bold text-neutral-800 mb-1">Estado <span class="text-red-500">*</span></label>
                         <div class="relative">
-                            <select id="chkState" required class="w-full appearance-none pl-3.5 pr-8 py-2.5 border border-neutral-300 rounded-xl text-xs font-medium text-neutral-900 bg-white focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20 transition">
+                            <select id="chkState" onchange="onCheckoutStateChange()" required class="w-full appearance-none pl-3.5 pr-8 py-2.5 border border-neutral-300 rounded-xl text-xs font-medium text-neutral-900 bg-white focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20 transition">
                                 <option value="" disabled selected>Selecciona Estado</option>
                                 <option value="Amazonas">Amazonas</option>
                                 <option value="Anzoátegui">Anzoátegui</option>
@@ -466,23 +469,52 @@
 
                     <div>
                         <label for="chkCity" class="block font-bold text-neutral-800 mb-1">Ciudad / Municipio <span class="text-red-500">*</span></label>
-                        <div class="flex items-center border border-neutral-300 rounded-xl overflow-hidden focus-within:border-sky-500 focus-within:ring-2 focus-within:ring-sky-500/20 bg-white transition">
-                            <span class="px-3 py-2.5 bg-neutral-100 text-neutral-500 border-r border-neutral-200">
-                                <i class="fa-solid fa-city text-xs"></i>
-                            </span>
-                            <input type="text" id="chkCity" required placeholder="Ej. Maracay / Valencia" class="w-full px-3 py-2.5 text-xs font-medium text-neutral-900 focus:outline-none">
+                        <div class="relative">
+                            <select id="chkCity" onchange="onCheckoutCityChange()" required disabled class="w-full appearance-none pl-9 pr-8 py-2.5 border border-neutral-300 rounded-xl text-xs font-medium text-neutral-900 bg-neutral-50 disabled:opacity-60 focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20 transition">
+                                <option value="" disabled selected>Primero elige el Estado</option>
+                            </select>
+                            <i class="fa-solid fa-city absolute left-3 top-3 text-neutral-500 text-xs pointer-events-none"></i>
+                            <i class="fa-solid fa-chevron-down absolute right-3 top-3 text-neutral-400 text-xs pointer-events-none"></i>
                         </div>
                     </div>
                 </div>
 
-                <!-- Dirección Exacta o Código de Agencia -->
+                <!-- Agencia de Envío (Desplegable) -->
                 <div>
-                    <label for="chkAgencyAddress" class="block font-bold text-neutral-800 mb-1">Dirección exacta o código de la agencia <span class="text-red-500">*</span></label>
+                    <label for="chkAgency" class="block font-bold text-neutral-800 mb-1">Empresa de envío (Cobro a Destino) <span class="text-red-500">*</span></label>
+                    <div class="relative">
+                        <select id="chkAgency" onchange="onCheckoutCourierChange()" required class="w-full appearance-none pl-10 pr-8 py-2.5 border border-neutral-300 rounded-xl text-xs font-semibold text-neutral-900 bg-white focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20 transition">
+                            <option value="" disabled selected>Selecciona la empresa de envío</option>
+                            <option value="MRW">MRW (Cobro a Destino)</option>
+                            <option value="Zoom">Zoom (Cobro a Destino)</option>
+                            <option value="Tealca">Tealca (Cobro a Destino)</option>
+                            <option value="Domesa">Domesa (Cobro a Destino)</option>
+                        </select>
+                        <i class="fa-solid fa-truck-fast absolute left-3.5 top-3 text-sky-600 text-xs pointer-events-none"></i>
+                        <i class="fa-solid fa-chevron-down absolute right-3.5 top-3 text-neutral-400 text-xs pointer-events-none"></i>
+                    </div>
+                </div>
+
+                <!-- Selector de Sucursal / Agencia Sugerida en la Ciudad -->
+                <div>
+                    <label for="chkBranchSelect" class="block font-bold text-neutral-800 mb-1">Sucursal / Agencia en tu ciudad <span class="text-red-500">*</span></label>
+                    <div class="relative">
+                        <select id="chkBranchSelect" onchange="onCheckoutBranchSelect()" required disabled class="w-full appearance-none pl-10 pr-8 py-2.5 border border-neutral-300 rounded-xl text-xs font-semibold text-neutral-900 bg-neutral-50 disabled:opacity-60 focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20 transition">
+                            <option value="" disabled selected>Elige Estado, Ciudad y Empresa...</option>
+                        </select>
+                        <i class="fa-solid fa-building-circle-check absolute left-3.5 top-3 text-emerald-600 text-xs pointer-events-none"></i>
+                        <i class="fa-solid fa-chevron-down absolute right-3.5 top-3 text-neutral-400 text-xs pointer-events-none"></i>
+                    </div>
+                </div>
+
+                <!-- Dirección Exacta o Código de Agencia (Autocompletado o Manual) -->
+                <div id="customAgencyAddressWrapper">
+                    <label for="chkAgencyAddress" class="block font-bold text-neutral-800 mb-1">Dirección o referencia de la agencia seleccionada <span class="text-red-500">*</span></label>
                     <div class="flex items-start border border-neutral-300 rounded-xl overflow-hidden focus-within:border-sky-500 focus-within:ring-2 focus-within:ring-sky-500/20 bg-white transition">
                         <span class="px-3.5 py-3 bg-neutral-100 text-neutral-500 border-r border-neutral-200 self-stretch flex items-center">
                             <i class="fa-solid fa-location-dot text-sm"></i>
                         </span>
-                        <textarea id="chkAgencyAddress" rows="2" required placeholder="Ej. Agencia MRW Centro Cód. 0401 o Av. Bolívar..." class="w-full px-3 py-2.5 text-xs font-medium text-neutral-900 focus:outline-none resize-none"></textarea>
+                        <textarea id="chkAgencyAddress" rows="2" required placeholder="Se rellena automáticamente al elegir la sucursal o puedes escribirla aquí..." class="w-full px-3 py-2.5 text-xs font-medium text-neutral-900 focus:outline-none resize-none"></textarea>
                     </div>
                 </div>
 
@@ -708,41 +740,745 @@
             return TG_KEY_PART_1 + TG_KEY_PART_2 + TG_KEY_PART_3;
         }
 
-        let currentBcvRate = 36.50;
+        // =========================================================================
+        // HELPER META PIXEL (FACEBOOK ADS) - RASTREO DE EVENTOS
+        // =========================================================================
+        function trackMetaPixel(eventName, params = {}) {
+            try {
+                if (typeof fbq === "function") {
+                    fbq("track", eventName, params);
+                }
+            } catch (e) {
+                console.warn("Meta Pixel error:", e);
+            }
+        }
+
+        // =========================================================================
+        // BASE DE DATOS GEOGRÁFICA DE VENEZUELA (24 ESTADOS -> TODAS LAS CIUDADES
+        // Y PRINCIPALES AGENCIAS MRW, ZOOM, TEALCA Y DOMESA)
+        // =========================================================================
+        const VENEZUELA_LOCATIONS = {
+            "Amazonas": {
+                cities: ["Puerto Ayacucho", "San Fernando de Atabapo", "San Carlos de Río Negro", "Maroa", "La Esmeralda", "Isla Ratón", "San Juan de Manapiare"],
+                branches: {
+                    "Puerto Ayacucho": {
+                        "MRW": ["MRW Puerto Ayacucho Centro (Av. Orinoco)", "MRW Puerto Ayacucho Av. Río Negro"],
+                        "Zoom": ["Zoom Puerto Ayacucho Centro (Av. 23 de Enero)"],
+                        "Tealca": ["Tealca Puerto Ayacucho (Av. Orinoco)"],
+                        "Domesa": ["Domesa Puerto Ayacucho Centro"]
+                    }
+                }
+            },
+            "Anzoátegui": {
+                cities: ["Barcelona", "Puerto La Cruz", "Lechería", "Guanta", "El Tigre", "San José de Guanipa (El Tigrito)", "Anaco", "Cantaura", "Píritu", "Puerto Píritu", "Clarines", "Pariaguán", "Aragua de Barcelona", "Boca de Uchire", "Onoto", "San Mateo", "Soledad"],
+                branches: {
+                    "Barcelona": {
+                        "MRW": ["MRW Barcelona Centro (Av. Miranda)", "MRW Barcelona Av. Intercomunal", "MRW Barcelona Nueva Barcelona (Av. Costanera)", "MRW Barcelona Fundación Mendoza"],
+                        "Zoom": ["Zoom Barcelona Av. Intercomunal", "Zoom Barcelona Centro (Calle Carabobo)", "Zoom Nueva Barcelona C.C. Puente Real"],
+                        "Tealca": ["Tealca Barcelona Av. Intercomunal", "Tealca Nueva Barcelona (Av. Centurión)", "Tealca Barcelona Centro"],
+                        "Domesa": ["Domesa Barcelona Av. Intercomunal", "Domesa Barcelona Centro"]
+                    },
+                    "Puerto La Cruz": {
+                        "MRW": ["MRW Puerto La Cruz Centro (Calle Libertad)", "MRW Puerto La Cruz Paseo Colón", "MRW Puerto La Cruz Av. Municipal", "MRW Puerto La Cruz Pozuelos"],
+                        "Zoom": ["Zoom Puerto La Cruz Av. Municipal", "Zoom Puerto La Cruz Calle Bolívar"],
+                        "Tealca": ["Tealca Puerto La Cruz Av. Municipal", "Tealca Puerto La Cruz Centro"],
+                        "Domesa": ["Domesa Puerto La Cruz Av. Municipal"]
+                    },
+                    "Lechería": {
+                        "MRW": ["MRW Lechería Av. Principal", "MRW Lechería C.C. Plaza Mayor", "MRW Lechería Sector Peñón del Faro"],
+                        "Zoom": ["Zoom Lechería Av. Principal", "Zoom Lechería C.C. Caribbean Mall"],
+                        "Tealca": ["Tealca Lechería Av. Principal", "Tealca Lechería C.C. Aventura Plaza"],
+                        "Domesa": ["Domesa Lechería Av. Principal"]
+                    },
+                    "El Tigre": {
+                        "MRW": ["MRW El Tigre Centro (Av. Francisco de Miranda)", "MRW El Tigre Av. España", "MRW El Tigre Pueblo Nuevo Norte"],
+                        "Zoom": ["Zoom El Tigre Av. Francisco de Miranda", "Zoom El Tigre Av. Intercomunal"],
+                        "Tealca": ["Tealca El Tigre Av. Francisco de Miranda"],
+                        "Domesa": ["Domesa El Tigre Centro"]
+                    },
+                    "Anaco": {
+                        "MRW": ["MRW Anaco Centro (Av. Mérida)", "MRW Anaco Av. Zulia"],
+                        "Zoom": ["Zoom Anaco Av. José Antonio Anzoátegui"],
+                        "Tealca": ["Tealca Anaco Centro"],
+                        "Domesa": ["Domesa Anaco Centro"]
+                    }
+                }
+            },
+            "Apure": {
+                cities: ["San Fernando de Apure", "Biruaca", "Guasdualito", "Achaguas", "Elorza", "Bruzual", "Mantecal", "San Juan de Payara", "El Amparo"],
+                branches: {
+                    "San Fernando de Apure": {
+                        "MRW": ["MRW San Fernando Centro (Av. Carabobo)", "MRW San Fernando Av. Miranda"],
+                        "Zoom": ["Zoom San Fernando de Apure (Av. Caracas)"],
+                        "Tealca": ["Tealca San Fernando de Apure (Paseo Libertador)"],
+                        "Domesa": ["Domesa San Fernando Centro"]
+                    },
+                    "Guasdualito": {
+                        "MRW": ["MRW Guasdualito Centro"],
+                        "Zoom": ["Zoom Guasdualito"],
+                        "Tealca": ["Tealca Guasdualito"],
+                        "Domesa": ["Domesa Guasdualito"]
+                    }
+                }
+            },
+            "Aragua": {
+                cities: ["Maracay", "Turmero", "Cagua", "La Victoria", "El Limón", "Palo Negro", "Santa Rita", "Villa de Cura", "San Mateo", "Las Tejerías", "Colonia Tovar", "San Sebastián de los Reyes", "San Casimiro", "Camatagua", "Barbacoas", "Magdaleno", "Ocumare de la Costa", "Choroní"],
+                branches: {
+                    "Maracay": {
+                        "MRW": ["MRW Maracay Centro (Av. Bolívar Este)", "MRW Maracay Av. Las Delicias", "MRW Maracay C.C. Parque Aragua", "MRW Maracay Av. Ayacucho", "MRW Maracay Av. Bermúdez", "MRW Maracay Base Aragua", "MRW Maracay Zona Industrial San Vicente"],
+                        "Zoom": ["Zoom Maracay Av. Bolívar", "Zoom Maracay Av. Las Delicias (C.C. Locatel)", "Zoom Maracay Zona Industrial San Jacinto", "Zoom Maracay Av. Fuerzas Aéreas"],
+                        "Tealca": ["Tealca Maracay Av. Bolívar", "Tealca Maracay Las Delicias", "Tealca Maracay Av. Aragua", "Tealca Maracay La Romana"],
+                        "Domesa": ["Domesa Maracay Av. Bolívar", "Domesa Maracay Av. Las Delicias", "Domesa Maracay Av. Constitución"]
+                    },
+                    "Turmero": {
+                        "MRW": ["MRW Turmero Centro (Calle Mariño)", "MRW Turmero Av. Intercomunal (La Julia / C.C. La Casona)"],
+                        "Zoom": ["Zoom Turmero Centro (Calle Rivas)", "Zoom Turmero Intercomunal"],
+                        "Tealca": ["Tealca Turmero Centro", "Tealca Intercomunal Turmero"],
+                        "Domesa": ["Domesa Turmero Centro"]
+                    },
+                    "Cagua": {
+                        "MRW": ["MRW Cagua Centro (Calle Bolívar)", "MRW Cagua Zona Industrial Corinsa"],
+                        "Zoom": ["Zoom Cagua Centro (Calle Sabana Larga)"],
+                        "Tealca": ["Tealca Cagua Centro"],
+                        "Domesa": ["Domesa Cagua Centro"]
+                    },
+                    "La Victoria": {
+                        "MRW": ["MRW La Victoria Centro (Av. Loreto)", "MRW La Victoria C.C. Palma Center"],
+                        "Zoom": ["Zoom La Victoria Centro (Calle Rivas Dávila)"],
+                        "Tealca": ["Tealca La Victoria Av. Francisco de Loreto"],
+                        "Domesa": ["Domesa La Victoria Centro"]
+                    },
+                    "Villa de Cura": {
+                        "MRW": ["MRW Villa de Cura Centro (Av. Paradisi)"],
+                        "Zoom": ["Zoom Villa de Cura Centro"],
+                        "Tealca": ["Tealca Villa de Cura"],
+                        "Domesa": ["Domesa Villa de Cura"]
+                    }
+                }
+            },
+            "Barinas": {
+                cities: ["Barinas", "Socopó", "Barinitas", "Santa Bárbara de Barinas", "Sabaneta", "Ciudad Bolivia (Pedraza)", "Barrancas", "Libertad", "Obispos", "Alberto Arvelo Torrealba"],
+                branches: {
+                    "Barinas": {
+                        "MRW": ["MRW Barinas Centro (Av. 23 de Enero)", "MRW Barinas Alto Barinas (Av. Los Andes)", "MRW Barinas Av. Cuatricentenaria", "MRW Barinas C.C. Cima"],
+                        "Zoom": ["Zoom Barinas Av. 23 de Enero", "Zoom Alto Barinas"],
+                        "Tealca": ["Tealca Barinas Av. 23 de Enero", "Tealca Alto Barinas"],
+                        "Domesa": ["Domesa Barinas Centro"]
+                    },
+                    "Socopó": {
+                        "MRW": ["MRW Socopó Centro (Av. Principal)"],
+                        "Zoom": ["Zoom Socopó"],
+                        "Tealca": ["Tealca Socopó"],
+                        "Domesa": ["Domesa Socopó"]
+                    }
+                }
+            },
+            "Bolívar": {
+                cities: ["Puerto Ordaz", "San Félix", "Ciudad Bolívar", "Upata", "Santa Elena de Uairén", "Caicara del Orinoco", "El Callao", "Guasipati", "Tumeremo", "Ciudad Piar", "Maripa"],
+                branches: {
+                    "Puerto Ordaz": {
+                        "MRW": ["MRW Puerto Ordaz Alta Vista (C.C. Ciudad Alta Vista)", "MRW Puerto Ordaz Castillito", "MRW Puerto Ordaz Unare", "MRW Puerto Ordaz Chilemex"],
+                        "Zoom": ["Zoom Puerto Ordaz Alta Vista", "Zoom Puerto Ordaz Unare (Zona Industrial)", "Zoom Puerto Ordaz Carrera Nekuima"],
+                        "Tealca": ["Tealca Puerto Ordaz Alta Vista", "Tealca Puerto Ordaz Castillito", "Tealca Puerto Ordaz Unare"],
+                        "Domesa": ["Domesa Puerto Ordaz Alta Vista", "Domesa Puerto Ordaz Castillito"]
+                    },
+                    "San Félix": {
+                        "MRW": ["MRW San Félix Centro (Av. Manuel Piar)", "MRW San Félix Dalla Costa"],
+                        "Zoom": ["Zoom San Félix Av. Manuel Piar"],
+                        "Tealca": ["Tealca San Félix Centro"],
+                        "Domesa": ["Domesa San Félix Centro"]
+                    },
+                    "Ciudad Bolívar": {
+                        "MRW": ["MRW Ciudad Bolívar Paseo Meneses", "MRW Ciudad Bolívar Av. Jesús Soto", "MRW Ciudad Bolívar Vista Hermosa"],
+                        "Zoom": ["Zoom Ciudad Bolívar Av. Jesús Soto", "Zoom Ciudad Bolívar Paseo Heres"],
+                        "Tealca": ["Tealca Ciudad Bolívar Av. Jesús Soto"],
+                        "Domesa": ["Domesa Ciudad Bolívar Centro"]
+                    },
+                    "Upata": {
+                        "MRW": ["MRW Upata Centro (Calle Miranda)"],
+                        "Zoom": ["Zoom Upata Centro"],
+                        "Tealca": ["Tealca Upata"],
+                        "Domesa": ["Domesa Upata"]
+                    }
+                }
+            },
+            "Carabobo": {
+                cities: ["Valencia", "Naguanagua", "San Diego", "Guacara", "Puerto Cabello", "Tocuyito", "Los Guayos", "Mariara", "San Joaquín", "Güigüe", "Bejuma", "Montalbán", "Miranda", "Morón"],
+                branches: {
+                    "Valencia": {
+                        "MRW": ["MRW Valencia Av. Bolívar Norte", "MRW Valencia Centro (Calle Colombia)", "MRW Valencia El Viñedo", "MRW Valencia Prebo (C.C. Shopping Center)", "MRW Valencia Zona Industrial", "MRW Valencia La Isabelica", "MRW Valencia Av. Lara", "MRW Valencia Flor Amarillo"],
+                        "Zoom": ["Zoom Valencia Av. Bolívar Norte", "Zoom Valencia Zona Industrial Castillito", "Zoom Valencia Prebo", "Zoom Valencia Centro (Av. Montes de Oca)", "Zoom Valencia El Trigal"],
+                        "Tealca": ["Tealca Valencia Av. Bolívar Norte", "Tealca Valencia Zona Industrial", "Tealca Valencia El Viñedo", "Tealca Valencia La Isabelica"],
+                        "Domesa": ["Domesa Valencia Av. Bolívar", "Domesa Valencia Zona Industrial", "Domesa Valencia Centro"]
+                    },
+                    "Naguanagua": {
+                        "MRW": ["MRW Naguanagua Av. Universidad", "MRW Naguanagua C.C. Free Market", "MRW Naguanagua La Granja"],
+                        "Zoom": ["Zoom Naguanagua Av. Universidad", "Zoom Naguanagua C.C. Cristal"],
+                        "Tealca": ["Tealca Naguanagua Av. Universidad"],
+                        "Domesa": ["Domesa Naguanagua Av. Universidad"]
+                    },
+                    "San Diego": {
+                        "MRW": ["MRW San Diego C.C. Fin de Siglo", "MRW San Diego Av. Don Julio Centeno (La Esmeralda)"],
+                        "Zoom": ["Zoom San Diego Av. Don Julio Centeno", "Zoom San Diego Zona Industrial"],
+                        "Tealca": ["Tealca San Diego C.C. Fin de Siglo"],
+                        "Domesa": ["Domesa San Diego Av. Don Julio Centeno"]
+                    },
+                    "Guacara": {
+                        "MRW": ["MRW Guacara Centro (Calle Páez)", "MRW Guacara C.C. Guacara Plaza"],
+                        "Zoom": ["Zoom Guacara Centro"],
+                        "Tealca": ["Tealca Guacara Centro"],
+                        "Domesa": ["Domesa Guacara Centro"]
+                    },
+                    "Puerto Cabello": {
+                        "MRW": ["MRW Puerto Cabello Centro (Calle Bolívar)", "MRW Puerto Cabello Rancho Grande"],
+                        "Zoom": ["Zoom Puerto Cabello Av. Juan José Flores"],
+                        "Tealca": ["Tealca Puerto Cabello Centro"],
+                        "Domesa": ["Domesa Puerto Cabello Centro"]
+                    }
+                }
+            },
+            "Cojedes": {
+                cities: ["San Carlos", "Tinaquillo", "Tinaco", "El Baúl", "Macapo", "El Pao", "Libertad de Cojedes", "Manrique"],
+                branches: {
+                    "San Carlos": {
+                        "MRW": ["MRW San Carlos Centro (Av. Bolívar)"],
+                        "Zoom": ["Zoom San Carlos Av. Bolívar"],
+                        "Tealca": ["Tealca San Carlos Centro"],
+                        "Domesa": ["Domesa San Carlos Centro"]
+                    },
+                    "Tinaquillo": {
+                        "MRW": ["MRW Tinaquillo Centro (Av. Carabobo)"],
+                        "Zoom": ["Zoom Tinaquillo"],
+                        "Tealca": ["Tealca Tinaquillo"],
+                        "Domesa": ["Domesa Tinaquillo"]
+                    }
+                }
+            },
+            "Delta Amacuro": {
+                cities: ["Tucupita", "Pedernales", "Curiapo", "Sierra Imataca"],
+                branches: {
+                    "Tucupita": {
+                        "MRW": ["MRW Tucupita Centro (Calle Dalla Costa)"],
+                        "Zoom": ["Zoom Tucupita Centro"],
+                        "Tealca": ["Tealca Tucupita"],
+                        "Domesa": ["Domesa Tucupita"]
+                    }
+                }
+            },
+            "Distrito Capital": {
+                cities: ["Caracas (Libertador - Centro)", "Caracas (Sabana Grande / Plaza Venezuela)", "Caracas (El Paraíso / Montalbán)", "Caracas (Catia / Propatria)", "Caracas (La Candelaria / Parque Carabobo)", "Caracas (San Martín / Capuchinos)", "Caracas (El Valle / Coche)", "Caracas (Caricuao / Antímano)", "Caracas (San Bernardino / Altamira Oeste)"],
+                branches: {
+                    "Caracas (Libertador - Centro)": {
+                        "MRW": ["MRW Capitolio (Av. Universidad)", "MRW La Hoyada (Av. Bolívar)", "MRW Bellas Artes", "MRW Quinta Crespo"],
+                        "Zoom": ["Zoom La Hoyada", "Zoom Av. Urdaneta", "Zoom Quinta Crespo"],
+                        "Tealca": ["Tealca Centro (Av. Urdaneta)", "Tealca Capitolio"],
+                        "Domesa": ["Domesa Centro (Av. Universidad)", "Domesa La Hoyada"]
+                    },
+                    "Caracas (Sabana Grande / Plaza Venezuela)": {
+                        "MRW": ["MRW Sabana Grande (Boulevard)", "MRW Plaza Venezuela (Torre Polar)", "MRW Chacaíto", "MRW Bello Monte"],
+                        "Zoom": ["Zoom Plaza Venezuela", "Zoom Sabana Grande", "Zoom Bello Monte"],
+                        "Tealca": ["Tealca Sabana Grande", "Tealca Plaza Venezuela"],
+                        "Domesa": ["Domesa Sabana Grande", "Domesa Plaza Venezuela"]
+                    },
+                    "Caracas (El Paraíso / Montalbán)": {
+                        "MRW": ["MRW El Paraíso (Av. Páez)", "MRW Montalbán (C.C. Uslar)"],
+                        "Zoom": ["Zoom El Paraíso (Av. Páez)", "Zoom Montalbán"],
+                        "Tealca": ["Tealca El Paraíso"],
+                        "Domesa": ["Domesa El Paraíso"]
+                    },
+                    "Caracas (Catia / Propatria)": {
+                        "MRW": ["MRW Catia (Av. Sucre)", "MRW Propatria (C.C. Propatria)"],
+                        "Zoom": ["Zoom Catia (Av. Sucre)"],
+                        "Tealca": ["Tealca Catia"],
+                        "Domesa": ["Domesa Catia"]
+                    },
+                    "Caracas (La Candelaria / Parque Carabobo)": {
+                        "MRW": ["MRW La Candelaria (Plaza Candelaria)", "MRW Parque Carabobo"],
+                        "Zoom": ["Zoom La Candelaria"],
+                        "Tealca": ["Tealca La Candelaria"],
+                        "Domesa": ["Domesa La Candelaria"]
+                    }
+                }
+            },
+            "Falcón": {
+                cities: ["Punto Fijo", "Coro", "Tucacas", "Chichiriviche", "Dabajuro", "La Vela de Coro", "Puerto Cumarebo", "Churuguara", "Mene de Mauroa", "Judibana", "Los Taques", "Adícora"],
+                branches: {
+                    "Punto Fijo": {
+                        "MRW": ["MRW Punto Fijo Centro (Av. Bolívar)", "MRW Punto Fijo Puerta Maraven", "MRW Punto Fijo C.C. Las Virtudes"],
+                        "Zoom": ["Zoom Punto Fijo Av. Jacinto Lara", "Zoom Punto Fijo Puerta Maraven"],
+                        "Tealca": ["Tealca Punto Fijo Centro", "Tealca Puerta Maraven"],
+                        "Domesa": ["Domesa Punto Fijo Centro"]
+                    },
+                    "Coro": {
+                        "MRW": ["MRW Coro Centro (Av. Manaure)", "MRW Coro Av. Los Médanos"],
+                        "Zoom": ["Zoom Coro Av. Manaure"],
+                        "Tealca": ["Tealca Coro Av. Manaure"],
+                        "Domesa": ["Domesa Coro Centro"]
+                    },
+                    "Tucacas": {
+                        "MRW": ["MRW Tucacas Av. Libertador"],
+                        "Zoom": ["Zoom Tucacas"],
+                        "Tealca": ["Tealca Tucacas"],
+                        "Domesa": ["Domesa Tucacas"]
+                    }
+                }
+            },
+            "Guárico": {
+                cities: ["San Juan de los Morros", "Calabozo", "Valle de la Pascua", "Zaraza", "Altagracia de Orituco", "Tucupido", "Camaguán", "El Sombrero", "Las Mercedes del Llano", "Chaguaramas"],
+                branches: {
+                    "San Juan de los Morros": {
+                        "MRW": ["MRW San Juan de los Morros Centro (Av. Bolívar)", "MRW San Juan Av. Sendrea"],
+                        "Zoom": ["Zoom San Juan de los Morros Av. Bolívar"],
+                        "Tealca": ["Tealca San Juan de los Morros"],
+                        "Domesa": ["Domesa San Juan de los Morros"]
+                    },
+                    "Calabozo": {
+                        "MRW": ["MRW Calabozo Centro (Carrera 12)"],
+                        "Zoom": ["Zoom Calabozo"],
+                        "Tealca": ["Tealca Calabozo"],
+                        "Domesa": ["Domesa Calabozo"]
+                    },
+                    "Valle de la Pascua": {
+                        "MRW": ["MRW Valle de la Pascua Centro (Calle Atarraya)"],
+                        "Zoom": ["Zoom Valle de la Pascua"],
+                        "Tealca": ["Tealca Valle de la Pascua"],
+                        "Domesa": ["Domesa Valle de la Pascua"]
+                    }
+                }
+            },
+            "La Guaira": {
+                cities: ["Maiquetía", "La Guaira", "Catia La Mar", "Macuto", "Caraballeda", "Naiguatá", "Carayaca"],
+                branches: {
+                    "Maiquetía": {
+                        "MRW": ["MRW Maiquetía Centro (Av. Carlos Soublette)", "MRW Aeropuerto Maiquetía"],
+                        "Zoom": ["Zoom Maiquetía Av. Soublette"],
+                        "Tealca": ["Tealca Maiquetía"],
+                        "Domesa": ["Domesa Maiquetía"]
+                    },
+                    "Catia La Mar": {
+                        "MRW": ["MRW Catia La Mar Av. Atlántida", "MRW Catia La Mar La Páez"],
+                        "Zoom": ["Zoom Catia La Mar"],
+                        "Tealca": ["Tealca Catia La Mar"],
+                        "Domesa": ["Domesa Catia La Mar"]
+                    },
+                    "La Guaira": {
+                        "MRW": ["MRW La Guaira Centro"],
+                        "Zoom": ["Zoom La Guaira"],
+                        "Tealca": ["Tealca La Guaira"],
+                        "Domesa": ["Domesa La Guaira"]
+                    }
+                }
+            },
+            "Lara": {
+                cities: ["Barquisimeto", "Cabudare", "Carora", "El Tocuyo", "Quíbor", "Duaca", "Sarare", "Siquisique", "Sanare"],
+                branches: {
+                    "Barquisimeto": {
+                        "MRW": ["MRW Barquisimeto Centro (Carrera 19)", "MRW Barquisimeto Este (Av. Lara)", "MRW Barquisimeto C.C. Sambil", "MRW Barquisimeto Av. Venezuela", "MRW Barquisimeto Oeste (Av. Florencio Jiménez)", "MRW Barquisimeto Nueva Segovia"],
+                        "Zoom": ["Zoom Barquisimeto Av. Lara", "Zoom Barquisimeto Centro (Carrera 19)", "Zoom Barquisimeto Zona Industrial I", "Zoom Barquisimeto Av. Los Leones"],
+                        "Tealca": ["Tealca Barquisimeto Este (Av. Lara)", "Tealca Barquisimeto Centro", "Tealca Barquisimeto Zona Industrial"],
+                        "Domesa": ["Domesa Barquisimeto Av. Venezuela", "Domesa Barquisimeto Este"]
+                    },
+                    "Cabudare": {
+                        "MRW": ["MRW Cabudare Centro (Av. Libertador)", "MRW Cabudare La Mora"],
+                        "Zoom": ["Zoom Cabudare Av. Intercomunal"],
+                        "Tealca": ["Tealca Cabudare"],
+                        "Domesa": ["Domesa Cabudare"]
+                    },
+                    "Carora": {
+                        "MRW": ["MRW Carora Centro (Av. Francisco de Miranda)"],
+                        "Zoom": ["Zoom Carora"],
+                        "Tealca": ["Tealca Carora"],
+                        "Domesa": ["Domesa Carora"]
+                    }
+                }
+            },
+            "Mérida": {
+                cities: ["Mérida", "El Vigía", "Ejido", "Tovar", "Mucuchíes", "Lagunillas", "Nueva Bolivia", "Bailadores", "Santa Cruz de Mora", "Timotes"],
+                branches: {
+                    "Mérida": {
+                        "MRW": ["MRW Mérida Centro (Av. 4 Bolívar)", "MRW Mérida Av. Las Américas", "MRW Mérida Los Próceres", "MRW Mérida Av. Urdaneta"],
+                        "Zoom": ["Zoom Mérida Av. Las Américas", "Zoom Mérida Centro (Calle 24)", "Zoom Mérida Av. Andrés Bello"],
+                        "Tealca": ["Tealca Mérida Av. Las Américas", "Tealca Mérida Centro"],
+                        "Domesa": ["Domesa Mérida Av. Las Américas", "Domesa Mérida Centro"]
+                    },
+                    "El Vigía": {
+                        "MRW": ["MRW El Vigía Centro (Av. Bolívar)", "MRW El Vigía Av. Don Pepe Rojas"],
+                        "Zoom": ["Zoom El Vigía Av. Bolívar"],
+                        "Tealca": ["Tealca El Vigía"],
+                        "Domesa": ["Domesa El Vigía"]
+                    },
+                    "Ejido": {
+                        "MRW": ["MRW Ejido Centro (Av. Fernández Peña)"],
+                        "Zoom": ["Zoom Ejido"],
+                        "Tealca": ["Tealca Ejido"],
+                        "Domesa": ["Domesa Ejido"]
+                    }
+                }
+            },
+            "Miranda": {
+                cities: ["Chacao / Altamira", "Petare / La California", "Los Dos Caminos / La Urbina", "Baruta / Las Mercedes", "El Hatillo / La Trinidad", "Los Teques", "San Antonio de los Altos", "Carrizal", "Guarenas", "Guatire", "Charallave", "Cúa", "Ocumare del Tuy", "Santa Teresa del Tuy", "Santa Lucía", "Higuerote", "Río Chico", "Caucagua"],
+                branches: {
+                    "Chacao / Altamira": {
+                        "MRW": ["MRW Chacao (Av. Francisco de Miranda)", "MRW Altamira (Av. San Juan Bosco)", "MRW La Castellana"],
+                        "Zoom": ["Zoom Chacao", "Zoom Altamira"],
+                        "Tealca": ["Tealca Chacao", "Tealca Altamira"],
+                        "Domesa": ["Domesa Chacao"]
+                    },
+                    "Petare / La California": {
+                        "MRW": ["MRW La California Norte", "MRW Palo Verde", "MRW Petare Redoma", "MRW El Marqués"],
+                        "Zoom": ["Zoom La California", "Zoom El Marqués"],
+                        "Tealca": ["Tealca La California"],
+                        "Domesa": ["Domesa La California"]
+                    },
+                    "Los Dos Caminos / La Urbina": {
+                        "MRW": ["MRW Los Dos Caminos", "MRW La Urbina (Calle 5)", "MRW Boleíta Norte"],
+                        "Zoom": ["Zoom La Urbina", "Zoom Los Ruices"],
+                        "Tealca": ["Tealca La Urbina", "Tealca Los Dos Caminos"],
+                        "Domesa": ["Domesa La Urbina", "Domesa Boleíta"]
+                    },
+                    "Baruta / Las Mercedes": {
+                        "MRW": ["MRW Las Mercedes (Av. Principal)", "MRW Santa Fe", "MRW Baruta Pueblo"],
+                        "Zoom": ["Zoom Las Mercedes", "Zoom Santa Paula"],
+                        "Tealca": ["Tealca Las Mercedes"],
+                        "Domesa": ["Domesa Las Mercedes"]
+                    },
+                    "Los Teques": {
+                        "MRW": ["MRW Los Teques Centro (Av. Bermúdez)", "MRW Los Teques El Tambor"],
+                        "Zoom": ["Zoom Los Teques Av. Bermúdez"],
+                        "Tealca": ["Tealca Los Teques"],
+                        "Domesa": ["Domesa Los Teques"]
+                    },
+                    "San Antonio de los Altos": {
+                        "MRW": ["MRW San Antonio C.C. La Casona", "MRW San Antonio C.C. Los Castores"],
+                        "Zoom": ["Zoom San Antonio de los Altos"],
+                        "Tealca": ["Tealca San Antonio de los Altos"],
+                        "Domesa": ["Domesa San Antonio"]
+                    },
+                    "Guarenas": {
+                        "MRW": ["MRW Guarenas Centro", "MRW Guarenas C.C. Miranda", "MRW Guarenas Nueva Casarapa"],
+                        "Zoom": ["Zoom Guarenas Zona Industrial"],
+                        "Tealca": ["Tealca Guarenas"],
+                        "Domesa": ["Domesa Guarenas"]
+                    },
+                    "Guatire": {
+                        "MRW": ["MRW Guatire Centro", "MRW Guatire C.C. Buenaventura"],
+                        "Zoom": ["Zoom Guatire Av. Intercomunal"],
+                        "Tealca": ["Tealca Guatire"],
+                        "Domesa": ["Domesa Guatire"]
+                    },
+                    "Charallave": {
+                        "MRW": ["MRW Charallave Centro (Av. Bolívar)", "MRW Charallave C.C. Matalinda"],
+                        "Zoom": ["Zoom Charallave"],
+                        "Tealca": ["Tealca Charallave"],
+                        "Domesa": ["Domesa Charallave"]
+                    }
+                }
+            },
+            "Monagas": {
+                cities: ["Maturín", "Punta de Mata", "Caripito", "Temblador", "Caripe", "Caicara de Maturín", "Aguasay", "Barrancas del Orinoco", "Quiriquire"],
+                branches: {
+                    "Maturín": {
+                        "MRW": ["MRW Maturín Centro (Av. Bolívar)", "MRW Maturín Tipuro", "MRW Maturín Av. Raúl Leoni", "MRW Maturín La Cascada"],
+                        "Zoom": ["Zoom Maturín Av. Bolívar", "Zoom Maturín Av. Alirio Ugarte Pelayo"],
+                        "Tealca": ["Tealca Maturín Av. Bolívar", "Tealca Maturín Tipuro"],
+                        "Domesa": ["Domesa Maturín Centro"]
+                    },
+                    "Punta de Mata": {
+                        "MRW": ["MRW Punta de Mata Centro"],
+                        "Zoom": ["Zoom Punta de Mata"],
+                        "Tealca": ["Tealca Punta de Mata"],
+                        "Domesa": ["Domesa Punta de Mata"]
+                    }
+                }
+            },
+            "Nueva Esparta": {
+                cities: ["Porlamar", "Pampatar", "Juan Griego", "La Asunción", "El Valle del Espíritu Santo", "San Juan Bautista", "Punta de Piedras", "Santa Ana", "Boca de Río"],
+                branches: {
+                    "Porlamar": {
+                        "MRW": ["MRW Porlamar Centro (Av. 4 de Mayo)", "MRW Porlamar Av. Santiago Mariño", "MRW Porlamar Conejeros"],
+                        "Zoom": ["Zoom Porlamar Av. 4 de Mayo", "Zoom Porlamar Av. Terranova"],
+                        "Tealca": ["Tealca Porlamar Av. 4 de Mayo"],
+                        "Domesa": ["Domesa Porlamar Centro"]
+                    },
+                    "Pampatar": {
+                        "MRW": ["MRW Pampatar C.C. Sambil Margarita", "MRW Pampatar Av. Jóvito Villalba"],
+                        "Zoom": ["Zoom Pampatar Av. Jóvito Villalba"],
+                        "Tealca": ["Tealca Pampatar"],
+                        "Domesa": ["Domesa Pampatar"]
+                    },
+                    "Juan Griego": {
+                        "MRW": ["MRW Juan Griego Centro"],
+                        "Zoom": ["Zoom Juan Griego"],
+                        "Tealca": ["Tealca Juan Griego"],
+                        "Domesa": ["Domesa Juan Griego"]
+                    }
+                }
+            },
+            "Portuguesa": {
+                cities: ["Acarigua", "Araure", "Guanare", "Turén (Villa Bruzual)", "Biscucuy", "Ospino", "Agua Blanca", "Píritu", "Guanarito", "Boconoíto"],
+                branches: {
+                    "Acarigua": {
+                        "MRW": ["MRW Acarigua Centro (Av. Libertador)", "MRW Acarigua Av. Alianza"],
+                        "Zoom": ["Zoom Acarigua Av. Libertador"],
+                        "Tealca": ["Tealca Acarigua Centro"],
+                        "Domesa": ["Domesa Acarigua Centro"]
+                    },
+                    "Araure": {
+                        "MRW": ["MRW Araure Centro (Av. 5 de Diciembre)"],
+                        "Zoom": ["Zoom Araure"],
+                        "Tealca": ["Tealca Araure"],
+                        "Domesa": ["Domesa Araure"]
+                    },
+                    "Guanare": {
+                        "MRW": ["MRW Guanare Centro (Carrera 5)", "MRW Guanare Av. Unda"],
+                        "Zoom": ["Zoom Guanare Av. Unda"],
+                        "Tealca": ["Tealca Guanare"],
+                        "Domesa": ["Domesa Guanare"]
+                    }
+                }
+            },
+            "Sucre": {
+                cities: ["Cumaná", "Carúpano", "Güiria", "Cariaco", "Cumanacoa", "Araya", "Río Caribe", "Irapa", "Marigüitar"],
+                branches: {
+                    "Cumaná": {
+                        "MRW": ["MRW Cumaná Centro (Av. Bermúdez)", "MRW Cumaná Av. Perimetral", "MRW Cumaná C.C. Marina Plaza"],
+                        "Zoom": ["Zoom Cumaná Av. Bermúdez", "Zoom Cumaná Av. Gran Mariscal"],
+                        "Tealca": ["Tealca Cumaná Av. Bermúdez"],
+                        "Domesa": ["Domesa Cumaná Centro"]
+                    },
+                    "Carúpano": {
+                        "MRW": ["MRW Carúpano Centro (Calle Independencia)"],
+                        "Zoom": ["Zoom Carúpano"],
+                        "Tealca": ["Tealca Carúpano"],
+                        "Domesa": ["Domesa Carúpano"]
+                    }
+                }
+            },
+            "Táchira": {
+                cities: ["San Cristóbal", "Táriba", "San Antonio del Táchira", "Ureña", "Rubio", "La Fría", "La Grita", "Colón (San Juan de Colón)", "Cordero", "Capacho", "Abejal / Palmira"],
+                branches: {
+                    "San Cristóbal": {
+                        "MRW": ["MRW San Cristóbal Centro (5ta Avenida)", "MRW San Cristóbal Barrio Obrero", "MRW San Cristóbal La Concordia", "MRW San Cristóbal Av. Carabobo", "MRW San Cristóbal Paramillo"],
+                        "Zoom": ["Zoom San Cristóbal Barrio Obrero", "Zoom San Cristóbal La Concordia", "Zoom San Cristóbal 5ta Avenida"],
+                        "Tealca": ["Tealca San Cristóbal Barrio Obrero", "Tealca San Cristóbal La Concordia"],
+                        "Domesa": ["Domesa San Cristóbal Centro", "Domesa San Cristóbal Barrio Obrero"]
+                    },
+                    "San Antonio del Táchira": {
+                        "MRW": ["MRW San Antonio del Táchira Centro (Av. Venezuela)"],
+                        "Zoom": ["Zoom San Antonio del Táchira"],
+                        "Tealca": ["Tealca San Antonio del Táchira"],
+                        "Domesa": ["Domesa San Antonio del Táchira"]
+                    },
+                    "Táriba": {
+                        "MRW": ["MRW Táriba Centro (Carrera 6)"],
+                        "Zoom": ["Zoom Táriba"],
+                        "Tealca": ["Tealca Táriba"],
+                        "Domesa": ["Domesa Táriba"]
+                    }
+                }
+            },
+            "Trujillo": {
+                cities: ["Valera", "Trujillo", "Boconó", "Sabana de Mendoza", "Betijoque", "Escuque", "Carache", "Monay", "Motatán"],
+                branches: {
+                    "Valera": {
+                        "MRW": ["MRW Valera Centro (Av. Bolívar)", "MRW Valera Plata I", "MRW Valera Las Acacias"],
+                        "Zoom": ["Zoom Valera Av. Bolívar"],
+                        "Tealca": ["Tealca Valera Av. Bolívar"],
+                        "Domesa": ["Domesa Valera Centro"]
+                    },
+                    "Trujillo": {
+                        "MRW": ["MRW Trujillo Centro (Av. Mendoza)"],
+                        "Zoom": ["Zoom Trujillo"],
+                        "Tealca": ["Tealca Trujillo"],
+                        "Domesa": ["Domesa Trujillo"]
+                    },
+                    "Boconó": {
+                        "MRW": ["MRW Boconó Centro"],
+                        "Zoom": ["Zoom Boconó"],
+                        "Tealca": ["Tealca Boconó"],
+                        "Domesa": ["Domesa Boconó"]
+                    }
+                }
+            },
+            "Yaracuy": {
+                cities: ["San Felipe", "Yaritagua", "Chivacoa", "Nirgua", "Cocorote", "Sabana de Parra", "Urachiche", "Aroa", "Boraure"],
+                branches: {
+                    "San Felipe": {
+                        "MRW": ["MRW San Felipe Centro (Av. Caracas)", "MRW San Felipe Independencia"],
+                        "Zoom": ["Zoom San Felipe Av. Caracas"],
+                        "Tealca": ["Tealca San Felipe Centro"],
+                        "Domesa": ["Domesa San Felipe Centro"]
+                    },
+                    "Yaritagua": {
+                        "MRW": ["MRW Yaritagua Centro (Carrera 19)"],
+                        "Zoom": ["Zoom Yaritagua"],
+                        "Tealca": ["Tealca Yaritagua"],
+                        "Domesa": ["Domesa Yaritagua"]
+                    },
+                    "Chivacoa": {
+                        "MRW": ["MRW Chivacoa Centro"],
+                        "Zoom": ["Zoom Chivacoa"],
+                        "Tealca": ["Tealca Chivacoa"],
+                        "Domesa": ["Domesa Chivacoa"]
+                    }
+                }
+            },
+            "Zulia": {
+                cities: ["Maracaibo", "San Francisco", "Cabimas", "Ciudad Ojeda", "Machiques", "Santa Bárbara del Zulia", "Villa del Rosario", "Mara (San Rafael del Moján)", "Los Puertos de Altagracia", "Mene Grande", "Bachaquero", "La Concepción", "Casigua El Cubo"],
+                branches: {
+                    "Maracaibo": {
+                        "MRW": ["MRW Maracaibo Bella Vista", "MRW Maracaibo 5 de Julio", "MRW Maracaibo Delicias Norte", "MRW Maracaibo La Limpia", "MRW Maracaibo Circunvalación 2", "MRW Maracaibo Centro (Av. Libertador)", "MRW Maracaibo Zona Industrial"],
+                        "Zoom": ["Zoom Maracaibo 5 de Julio", "Zoom Maracaibo Bella Vista", "Zoom Maracaibo La Limpia", "Zoom Maracaibo Circunvalación 2", "Zoom Maracaibo Zona Industrial"],
+                        "Tealca": ["Tealca Maracaibo 5 de Julio", "Tealca Maracaibo La Limpia", "Tealca Maracaibo Bella Vista", "Tealca Maracaibo Circunvalación 2"],
+                        "Domesa": ["Domesa Maracaibo 5 de Julio", "Domesa Maracaibo La Limpia", "Domesa Maracaibo Zona Industrial"]
+                    },
+                    "San Francisco": {
+                        "MRW": ["MRW San Francisco Av. 40 (Urbanización San Francisco)", "MRW San Francisco La Coromoto", "MRW San Francisco Sierra Maestra"],
+                        "Zoom": ["Zoom San Francisco Av. 40", "Zoom San Francisco Km 4"],
+                        "Tealca": ["Tealca San Francisco Av. 40"],
+                        "Domesa": ["Domesa San Francisco"]
+                    },
+                    "Cabimas": {
+                        "MRW": ["MRW Cabimas Centro (Av. Miraflores)", "MRW Cabimas Carretera H"],
+                        "Zoom": ["Zoom Cabimas Carretera H"],
+                        "Tealca": ["Tealca Cabimas"],
+                        "Domesa": ["Domesa Cabimas"]
+                    },
+                    "Ciudad Ojeda": {
+                        "MRW": ["MRW Ciudad Ojeda Centro (Av. Bolívar)", "MRW Ciudad Ojeda Av. Intercomunal"],
+                        "Zoom": ["Zoom Ciudad Ojeda Av. Bolívar"],
+                        "Tealca": ["Tealca Ciudad Ojeda"],
+                        "Domesa": ["Domesa Ciudad Ojeda"]
+                    }
+                }
+            }
+        };
+
+        function onCheckoutStateChange() {
+            const stateSelect = document.getElementById("chkState");
+            const citySelect = document.getElementById("chkCity");
+            const selectedState = stateSelect.value;
+
+            citySelect.innerHTML = `<option value="" disabled selected>Selecciona la ciudad / municipio</option>`;
+            if (selectedState && VENEZUELA_LOCATIONS[selectedState]) {
+                VENEZUELA_LOCATIONS[selectedState].cities.forEach(city => {
+                    const opt = document.createElement("option");
+                    opt.value = city;
+                    opt.textContent = city;
+                    citySelect.appendChild(opt);
+                });
+                citySelect.disabled = false;
+                citySelect.classList.remove("bg-neutral-50");
+                citySelect.classList.add("bg-white");
+            } else {
+                citySelect.disabled = true;
+            }
+            updateBranchDropdown();
+        }
+
+        function onCheckoutCityChange() {
+            updateBranchDropdown();
+        }
+
+        function onCheckoutCourierChange() {
+            updateBranchDropdown();
+        }
+
+        function updateBranchDropdown() {
+            const stateVal = document.getElementById("chkState").value;
+            const cityVal = document.getElementById("chkCity").value;
+            const courierVal = document.getElementById("chkAgency").value;
+            const branchSelect = document.getElementById("chkBranchSelect");
+            const addressInput = document.getElementById("chkAgencyAddress");
+
+            if (!stateVal || !cityVal || !courierVal) {
+                branchSelect.innerHTML = `<option value="" disabled selected>Elige Estado, Ciudad y Empresa...</option>`;
+                branchSelect.disabled = true;
+                branchSelect.classList.add("bg-neutral-50");
+                branchSelect.classList.remove("bg-white");
+                return;
+            }
+
+            const stateObj = VENEZUELA_LOCATIONS[stateVal];
+            let suggestedBranches = [];
+            if (stateObj && stateObj.branches && stateObj.branches[cityVal] && stateObj.branches[cityVal][courierVal]) {
+                suggestedBranches = stateObj.branches[cityVal][courierVal];
+            } else {
+                // Sugerencias estándar para ciudades/municipios sin sucursal múltiple detallada
+                suggestedBranches = [
+                    `${courierVal} ${cityVal} - Agencia Principal / Centro`,
+                    `${courierVal} ${cityVal} - Oficina Receptoría Comercial`
+                ];
+            }
+
+            branchSelect.innerHTML = `<option value="" disabled selected>Selecciona la sucursal ${courierVal} en ${cityVal}</option>`;
+            suggestedBranches.forEach(branchName => {
+                const opt = document.createElement("option");
+                opt.value = branchName;
+                opt.textContent = branchName;
+                branchSelect.appendChild(opt);
+            });
+
+            // Opción adicional para ingresar otra sucursal o código específico
+            const manualOpt = document.createElement("option");
+            manualOpt.value = "__CUSTOM__";
+            manualOpt.textContent = `✍️ Otra agencia ${courierVal} en ${cityVal} (Escribir código/dirección)`;
+            branchSelect.appendChild(manualOpt);
+
+            branchSelect.disabled = false;
+            branchSelect.classList.remove("bg-neutral-50");
+            branchSelect.classList.add("bg-white");
+            addressInput.value = "";
+        }
+
+        function onCheckoutBranchSelect() {
+            const branchSelect = document.getElementById("chkBranchSelect");
+            const addressInput = document.getElementById("chkAgencyAddress");
+            const selectedBranch = branchSelect.value;
+
+            if (selectedBranch === "__CUSTOM__") {
+                addressInput.value = "";
+                addressInput.placeholder = "Escribe el nombre, código o dirección exacta de la agencia...";
+                addressInput.focus();
+            } else if (selectedBranch) {
+                addressInput.value = selectedBranch;
+            }
+        }
+
+        // =========================================================================
+        // ESTADO GLOBAL DE LA TIENDA Y ALGORITMO DE INTERÉS (LOCALSTORAGE)
+        // =========================================================================
+        let currentBcvRate = 65.00;
         let cart = [];
         let searchQuery = "";
         let catalogSortMode = "recommended";
         let hasOpenedCartFirstTime = false;
-        let checkoutItems = [];
         let isSingleItemCheckout = false;
+        let checkoutItems = [];
 
-        // =========================================================================
-        // ALGORITMO DE RECOMENDACIÓN BASADO EN INTERESES (LOCALSTORAGE)
-        // =========================================================================
-        const INTEREST_STORAGE_KEY = "mj_user_interest_profile_v1";
+        const INTEREST_STORAGE_KEY = "mj_user_interests_v1";
         const STOP_WORDS = new Set([
-            "para", "con", "sin", "por", "los", "las", "del", "una", "uno", "unos", "unas",
-            "que", "como", "mas", "pero", "sus", "este", "esta", "estos", "estas", "todo",
-            "toda", "todos", "todas", "sobre", "entre", "hasta", "desde", "piezas", "pcs",
-            "kit", "set", "mini", "tipo", "alta", "uso", "nuevo", "original"
+            "para", "con", "sin", "los", "las", "del", "una", "uno", "unos", "unas",
+            "por", "que", "como", "mas", "pero", "sus", "este", "esta", "estos", "estas",
+            "tipo", "color", "pieza", "piezas", "pcs", "kit", "set", "und", "pack", "mini"
         ]);
 
         let userInterestProfile = {
-            keywords: {},   // { palabra: puntaje }
-            viewedIds: {},  // { prod_id: veces_visto }
+            keywords: {},
+            viewedIds: {},
             totalSignals: 0
         };
 
         function loadInterestProfile() {
             try {
-                const raw = localStorage.getItem(INTEREST_STORAGE_KEY);
-                if (raw) {
-                    const parsed = JSON.parse(raw);
+                const saved = localStorage.getItem(INTEREST_STORAGE_KEY);
+                if (saved) {
+                    const parsed = JSON.parse(saved);
                     if (parsed && typeof parsed === "object") {
                         userInterestProfile = {
                             keywords: parsed.keywords || {},
                             viewedIds: parsed.viewedIds || {},
-                            totalSignals: parsed.totalSignals || 0
+                            totalSignals: Number(parsed.totalSignals) || 0
                         };
                     }
                 }
@@ -1158,6 +1894,17 @@
                 qty: 1,
                 maxStock: product.stock
             }];
+
+            // Evento Meta Pixel: InitiateCheckout
+            trackMetaPixel("InitiateCheckout", {
+                content_ids: [product.id],
+                content_name: product.name,
+                content_type: "product",
+                num_items: 1,
+                value: Number(product.price.toFixed(2)),
+                currency: "USD"
+            });
+
             updateCheckoutSummaryUI();
             document.getElementById('checkoutModal').classList.remove('hidden');
         }
@@ -1176,6 +1923,19 @@
                     maxStock: prod ? prod.stock : item.qty
                 };
             });
+
+            const cartTotalVal = checkoutItems.reduce((acc, it) => acc + (it.price * it.qty), 0);
+            const cartTotalQty = checkoutItems.reduce((acc, it) => acc + it.qty, 0);
+
+            // Evento Meta Pixel: InitiateCheckout desde carrito
+            trackMetaPixel("InitiateCheckout", {
+                content_ids: checkoutItems.map(it => it.id),
+                content_type: "product",
+                num_items: cartTotalQty,
+                value: Number(cartTotalVal.toFixed(2)),
+                currency: "USD"
+            });
+
             document.getElementById('cartDrawer').classList.add('hidden');
             updateCheckoutSummaryUI();
             document.getElementById('checkoutModal').classList.remove('hidden');
@@ -1345,6 +2105,21 @@
                 sendOrderToGoogleSheets(orderPayload),
                 sendOrderToTelegram(telegramMsg)
             ]);
+
+            // Evento Meta Pixel: Purchase (Compra completada)
+            const totalUnitsPurchased = checkoutItems.reduce((acc, it) => acc + it.qty, 0);
+            trackMetaPixel("Purchase", {
+                content_ids: checkoutItems.map(it => it.id),
+                contents: checkoutItems.map(it => ({
+                    id: it.id,
+                    quantity: it.qty,
+                    item_price: Number(it.price.toFixed(2))
+                })),
+                content_type: "product",
+                num_items: totalUnitsPurchased,
+                value: Number(totalUsd.toFixed(2)),
+                currency: "USD"
+            });
 
             const pagoCedula = document.getElementById('pago-cedula').innerText.trim();
             const pagoBanco = document.getElementById('pago-banco').innerText.trim();
