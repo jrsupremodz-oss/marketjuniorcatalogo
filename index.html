@@ -678,16 +678,14 @@
         // =========================================================================
         // CONFIGURACIÓN DE INTEGRACIONES (GOOGLE SHEETS & TELEGRAM BOT FRAGMENTADO)
         // =========================================================================
-        // 1. Pega aquí la URL de tu aplicación web de Google Apps Script:
+        // 1. URL de aplicación web de Google Apps Script:
         const GOOGLE_SHEETS_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbw0tLsHUwstk4PfV4ZE0Bi_FNP2VNuJQYS0R4fEwF837rPou5dVJbNIFYLPSyIdLHxo/exec"; 
         
-        // 2. Token de Telegram fragmentado en 3 partes para evitar falsos positivos/alertas de JivoChat u otros escáneres:
-        // Ejemplo: si tu token es "123456789:ABCdefGHIjklMNOpqrSTUvwxYZ"
-        // Parte 1: "123456789" | Parte 2: "ABCdefGHIjkl" | Parte 3: "MNOpqrSTUvwxYZ"
+        // 2. Token de Telegram fragmentado en 3 partes para evitar falsos positivos/alertas de escáneres:
         const TG_KEY_PART_1 = "8683366249"; // Números antes de los dos puntos (:)
-        const TG_KEY_PART_2 = ":AAGOU47FObO4MT"; // Primera mitad después de los dos puntos
-        const TG_KEY_PART_3 = "8OvOeQ7-fA8IgR1C_ga1I"; // Segunda mitad final
-        const TG_DEST_ID = "1829790745";    // Tu Chat ID numérico (ej. "987654321")
+        const TG_KEY_PART_2 = "AAGOU47FObO4MT8Ov"; // Primera mitad después de los dos puntos
+        const TG_KEY_PART_3 = "OeQ7-fA8IgR1C_ga1I"; // Segunda mitad final
+        const TG_DEST_ID = "1829790745";    // Chat ID numérico
         // =========================================================================
 
         let currentBcvRate = 36.50;
